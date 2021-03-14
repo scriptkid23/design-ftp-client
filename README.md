@@ -22,9 +22,9 @@ or ``` tdm-gcc-9.2.0.exe``` if you use to os 32bit
 
 ### The third:
 
-Step 1: open **cmd** in folder **design-ftp-client/build**
+Step 1: open **cmd** in folder **design-ftp-client/build** [tutorial](https://www.youtube.com/watch?v=bgSSJQolR0E)
 
-Step 2
+Step 2 : in **cmd** you type
 ```bash
 cmake --build .
 ftpclient
