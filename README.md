@@ -12,11 +12,11 @@ or ``` tdm-gcc-9.2.0.exe``` if you use to os 32bit
 
 - run Cmake(cmake-gui)
 
-    Step 1: In field **Where is the source code** click **Browser Source** and select folder **design-ftp-client**
+    Step 1: In field **Where is the source code** click **Browser Source...** and select folder **design-ftp-client**
     
     Step 2: Create folder **build** in **design-ftp-client**
 
-    Step 3: In field **Where to build the binaries** and select folder **design-ftp-client/build**
+    Step 3: In field **Where to build the binaries** click **Browser Build...** and select folder **design-ftp-client/build**
 
     After click to Generate if have show dialog then select **MinGW Makefiles** and click **Use default native compilers**
 
