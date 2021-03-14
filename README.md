@@ -18,7 +18,7 @@ or ``` tdm-gcc-9.2.0.exe``` if you use to os 32bit
 
     Step 3: In field **Where to build the binaries** click **Browser Build...** and select folder **design-ftp-client/build**
 
-    After click to Generate if have show dialog then select **MinGW Makefiles** and click **Use default native compilers**
+    After click to **Generate** if have show dialog then select **MinGW Makefiles** and click **Use default native compilers**
 
 ### The third:
 
