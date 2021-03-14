@@ -4,8 +4,8 @@
 ## Setup
 
 ### The first:
-- Download cmake: [download](https://cmake.org/download).
-- Download tdm-gcc: [download](https://jmeubank.github.io/tdm-gcc/download/) with version ```tdm64-gcc-9.2.0.exe```
+- Download and install cmake: [download](https://cmake.org/download).
+- Download and install tdm-gcc: [download](https://jmeubank.github.io/tdm-gcc/download/) with version ```tdm64-gcc-9.2.0.exe```
 or ``` tdm-gcc-9.2.0.exe``` if you use to os 32bit
 
 ### The second:
