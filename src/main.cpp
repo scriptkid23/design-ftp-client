@@ -1,38 +1,24 @@
-#include <iostream>
-#include "Display.h"
+/*
+	Initialise Winsock
+*/
 
-#define USERNAME "123"
-#define PASSWORD "123"
+#include<stdio.h>
+#include<winsock2.h>
 
-using namespace std;
+#pragma comment(lib,"ws2_32.lib") //Winsock Library
 
-int main(int argc, const char** argv) {
+int main(int argc , char *argv[])
+{
+	WSADATA wsa;
+	
+	printf("\nInitialising Winsock...");
+	if (WSAStartup(MAKEWORD(2,2),&wsa) != 0)
+	{
+		printf("Failed. Error Code : %d",WSAGetLastError());
+		return 1;
+	}
+	
+	printf("Initialised.");
 
-    string syntax;
-    Display dp;
-    while (true)
-    {
-        bool flag = true;
-        dp.commandline_screen("");
-        getline(cin,syntax);
-        cout << endl;
-        if(syntax.compare("connect localhost 123 123") == 0){
-            while (flag)
-            {
-                dp.commandline_screen("server");
-                getline(cin,syntax);
-                if(syntax.compare("exit") == 0){
-                    flag = false;
-                }
-            }
-            
-        }
-        else{
-            cout << "Username or password not match!" << endl;
-        }
-
-
-    }
-    
-    return 0;
+	return 0;
 }
