@@ -22,7 +22,7 @@ or ``` tdm-gcc-9.2.0.exe``` if you use to os 32bit
 
 ### The third:
 
-Step 1: open **cmd** in folder **design-ftp-client/build** [tutorial](https://www.youtube.com/watch?v=bgSSJQolR0E)
+Step 1: open **cmd** in folder **design-ftp-client/build** (you can view [tutorial](https://www.youtube.com/watch?v=bgSSJQolR0E))
 
 Step 2 : in **cmd** you type
 ```bash
