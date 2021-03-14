@@ -1,9 +1,38 @@
 #include <iostream>
-#include "display.h"
+#include "Display.h"
+
+#define USERNAME "123"
+#define PASSWORD "123"
+
+using namespace std;
+
 int main(int argc, const char** argv) {
 
+    string syntax;
     Display dp;
-    dp.do_something();
-    std::cout << "Cmake Test Succeeded" << std::endl;
+    while (true)
+    {
+        bool flag = true;
+        dp.commandline_screen("");
+        getline(cin,syntax);
+        cout << endl;
+        if(syntax.compare("connect localhost 123 123") == 0){
+            while (flag)
+            {
+                dp.commandline_screen("server");
+                getline(cin,syntax);
+                if(syntax.compare("exit") == 0){
+                    flag = false;
+                }
+            }
+            
+        }
+        else{
+            cout << "Username or password not match!" << endl;
+        }
+
+
+    }
+    
     return 0;
 }

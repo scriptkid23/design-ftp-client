@@ -4,8 +4,11 @@
 
     class Display
     {
-    public:
-        void do_something();
+        
+        public:
+            void home_screen();
+            void help_screen();
+            void commandline_screen(std::string str);
     };
 
 #endif /* DISPLAY_H */
