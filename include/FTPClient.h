@@ -1,4 +1,4 @@
-// display.h
+
 #ifndef FTPCLIENT_H // include guard
 #define FTPCLIENT_H
 
@@ -8,4 +8,4 @@
         
     };
 
-#endif /* DISPLAY_H */
+#endif

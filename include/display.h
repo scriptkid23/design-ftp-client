@@ -7,7 +7,7 @@
         
         public:
             void home_screen();
-            void help_screen();
+            void help_screen(int key);
             void commandline_screen(std::string str);
     };
 
