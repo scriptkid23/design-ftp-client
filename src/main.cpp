@@ -8,9 +8,8 @@
 #include "Display.h"
 #include <unistd.h>  
 #include <windows.h>
+#include <constants.h>
 
-#define USER "123"
-#define PASS "123"
 
 #pragma comment(lib,"ws2_32.lib") //Winsock Library
 
@@ -36,9 +35,11 @@ int main(int argc , char *argv[])
 
 	string syntax;
 	Display dp;
-
+	locale ll;
+	system("cls");
 	dp.home_screen();
-
+	
+	
 	while(true){
 		
 		string to, user, pass; // password string pointer
@@ -46,11 +47,11 @@ int main(int argc , char *argv[])
     	SetConsoleTextAttribute(hConsoleColor, 15);
 		dp.commandline_screen("");
 		getline(cin,syntax);
-
-		if(syntax.compare("help") == 0){
+		
+		if(syntax.compare(HELP) == 0){
 			dp.help_screen(0);
 		}
-		else if(syntax.compare("connect") == 0){
+		else if(syntax.compare(CONNECT) == 0){
 
 			
 			cout << "To: ";
@@ -74,20 +75,21 @@ int main(int argc , char *argv[])
 					dp.commandline_screen("server");
 
 					getline(cin,syntax);
-					if(syntax.compare("help") == 0){
+
+					if(syntax.compare(HELP) == 0){
 						dp.help_screen(0);
 					}
-					else if(syntax.compare("exit") == 0){
+					else if(syntax.compare(EXIT) == 0){
 						flag = false;
 					}
-					else if(syntax.compare("clear") == 0){
+					else if(syntax.compare(CLEAR) == 0){
 						system("cls");
 					}
 					cout << endl;
 				}
 			}
 		}
-		else if(syntax.compare("clear") == 0){
+		else if(syntax.compare(CLEAR) == 0){
 			system("cls");
 		}
 		else{
