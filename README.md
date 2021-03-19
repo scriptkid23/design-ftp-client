@@ -1,7 +1,7 @@
 # Design FTP Client 
 
 
-## Setup
+## Installation
 
 ### The first:
 - Download and install cmake: [download](https://cmake.org/download).
