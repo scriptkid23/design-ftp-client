@@ -31,4 +31,4 @@ ftpclient
 ```
 ## Note
 
-After completing the installation steps, from now on every time we want to run the program just open the `compiler.bat` file.
+After completing the installation steps, from now on every time we want to run the program just open the `ftpclient.bat` file.
