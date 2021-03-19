@@ -14,7 +14,7 @@ or ``` tdm-gcc-9.2.0.exe``` if you use to os 32bit
 
     Step 1: In field **Where is the source code** click **Browser Source...** and select folder `design-ftp-client`
     
-    Step 2: Create folder **build** in folder `design-ftp-client`
+    Step 2: Create folder `build` in folder `design-ftp-client`
 
     Step 3: In field **Where to build the binaries** click **Browser Build...** and select folder `design-ftp-client/build`
 
