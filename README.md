@@ -18,7 +18,7 @@ or ``` tdm-gcc-9.2.0.exe``` if you use to os 32bit
 
     Step 3: In field **Where to build the binaries** click **Browser Build...** and select folder **design-ftp-client/build**
 
-    After click to **Generate** if have show dialog then select **MinGW Makefiles** and click **Use default native compilers**
+    Step 4: After click to **Generate** if have show dialog then select **MinGW Makefiles** and click **Use default native compilers**
 
 ### The third:
 
@@ -29,3 +29,6 @@ Step 2 : in **cmd** you type
 cmake --build .
 ftpclient
 ```
+## Note
+
+After completing the installation steps, from now on every time we want to run the program just open the `compiler.bat` file.
