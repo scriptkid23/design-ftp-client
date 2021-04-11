@@ -44,21 +44,40 @@ int main(int argc , char *argv[])
 	
 	puts("Connected");
 
-	char loginMsg[] = "USER workpc\r\nPASS 123\r\n";
+	char loginMsg[] = "USER workpc\r\nPASS 1234\r\n";
 	bool flag = false;
-	char responce[4] = {'\0'};
+	char response[4] = {"\0"};
 	// std::cout << send(s, loginMsg, strlen(loginMsg), 0);
 	// recv(sock, responce, 3, 0);
 	// if (strcmp(responce, "230") != 0)
-	send(s, loginMsg, strlen(loginMsg), 0) != 0 ? flag = true : flag = false;
-	while (flag)
-	{
-		/* code */
+	send(s, loginMsg, strlen(loginMsg), 0) < 0 ? flag = false : flag = true;
+	
+	// while (flag)
+	// {
+	// 	recv(s, responce, 3, 0);
+	// 	std::cout << responce << std::endl;
+	// }
+	
 
-	}
-	std::cout << "Connect Failed";
+	while (flag)
+	{	
+		recv(s, response, 3, 0);
+		if(strcmp(response,"230") == 0){
+			
+			std::cout << "Connect Succeeded" << std::endl;
+			break;
+		}
+		if(strcmp(response,"530") == 0){
+			std::cout << "USER or PASS incorrect" << std::endl;
+			break;
+		}
+	}	
+	
+		
 	
 	
+	closesocket(s);
+	WSACleanup();
 
 	return 0;
 }
