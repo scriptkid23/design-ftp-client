@@ -1,102 +1,63 @@
 /*
-	Initialise Winsock
+	Create a TCP socket
 */
 #include <iostream>
 #include<stdio.h>
 #include<winsock2.h>
-#include <string>
-#include "Display.h"
-#include <unistd.h>  
-#include <windows.h>
-#include <constants.h>
-
 
 #pragma comment(lib,"ws2_32.lib") //Winsock Library
 
-using namespace std;
-
-
-
 int main(int argc , char *argv[])
 {
-	// WSADATA wsa;
-	
-	// printf("\nInitialising Winsock...");
-	// if (WSAStartup(MAKEWORD(2,2),&wsa) != 0)
-	// {
-	// 	printf("Failed. Error Code : %d",WSAGetLastError());
-	// 	return 1;
-	// }
-	
-	// printf("Initialised.");
-	
-	HANDLE hConsoleColor;
-    hConsoleColor = GetStdHandle(STD_OUTPUT_HANDLE);
+	WSADATA wsa;
+	SOCKET s;
+	struct sockaddr_in server;
 
-	string syntax;
-	Display dp;
-	locale ll;
-	system("cls");
-	dp.home_screen();
-	
-	
-	while(true){
-		
-		string to, user, pass; // password string pointer
-		bool flag = true;
-    	SetConsoleTextAttribute(hConsoleColor, 15);
-		dp.commandline_screen("");
-		getline(cin,syntax);
-		
-		if(syntax.compare(HELP) == 0){
-			dp.help_screen(0);
-		}
-		else if(syntax.compare(CONNECT) == 0){
-
-			
-			cout << "To: ";
-			getline(cin,to);
-
-			cout << "Username: ";
-			getline(cin,user);
-
-			cout << "Password: ";
-			HANDLE hStdin = GetStdHandle(STD_INPUT_HANDLE);
-			DWORD mode = 0;
-			GetConsoleMode(hStdin, &mode);
-			SetConsoleMode(hStdin, mode & (~ENABLE_ECHO_INPUT));
-			getline(cin,pass);
-			SetConsoleMode(hStdin, mode | (~ENABLE_ECHO_INPUT));
-			cout << endl;
-
-			if(pass.compare(PASS) == 0 && user.compare(USER) == 0){
-				while (flag)
-				{
-					dp.commandline_screen("server");
-
-					getline(cin,syntax);
-
-					if(syntax.compare(HELP) == 0){
-						dp.help_screen(0);
-					}
-					else if(syntax.compare(EXIT) == 0){
-						flag = false;
-					}
-					else if(syntax.compare(CLEAR) == 0){
-						system("cls");
-					}
-					cout << endl;
-				}
-			}
-		}
-		else if(syntax.compare(CLEAR) == 0){
-			system("cls");
-		}
-		else{
-			cout <<"'"<<syntax<<"' is not recognized as an internal or external command." << endl;
-		}
-		cout << endl;
+	printf("\nInitialising Winsock...");
+	if (WSAStartup(MAKEWORD(2,2),&wsa) != 0)
+	{
+		printf("Failed. Error Code : %d",WSAGetLastError());
+		return 1;
 	}
+	
+	printf("Initialised.\n");
+	
+	//Create a socket
+	if((s = socket(AF_INET , SOCK_STREAM , 0 )) == INVALID_SOCKET)
+	{
+		printf("Could not create socket : %d" , WSAGetLastError());
+	}
+
+	printf("Socket created.\n");
+	
+	
+	server.sin_addr.s_addr = inet_addr("192.168.0.106");
+	server.sin_family = AF_INET;
+	server.sin_port = htons( 21 );
+
+	//Connect to remote server
+	if (connect(s , (struct sockaddr *)&server , sizeof(server)) < 0)
+	{
+		puts("connect error");
+		return 1;
+	}
+	
+	puts("Connected");
+
+	char loginMsg[] = "USER workpc\r\nPASS 123\r\n";
+	bool flag = false;
+	char responce[4] = {'\0'};
+	// std::cout << send(s, loginMsg, strlen(loginMsg), 0);
+	// recv(sock, responce, 3, 0);
+	// if (strcmp(responce, "230") != 0)
+	send(s, loginMsg, strlen(loginMsg), 0) != 0 ? flag = true : flag = false;
+	while (flag)
+	{
+		/* code */
+
+	}
+	std::cout << "Connect Failed";
+	
 	
 
 	return 0;
