@@ -44,11 +44,11 @@ class CmdLineInterface {
         void run();
         virtual void initCmd();
     private:
-        void readCmd(char* cmd_buf, int buflen);
-        uint8_t parseCmd(char *cmd_buf, char * cmd_argv[], int& cmd_argc);
+        void readCmd(char *cmd_buf, int buflen);
+        uint8_t parseCmd(char *cmd_buf, char *cmd_argv[], int& cmd_argc);
         void doUnknown();
         void doQuit();
-        void doCmd(uint8_t id, char * cmd_argv[], int cmd_argc);
+        void doCmd(uint8_t id, char *cmd_argv[], int cmd_argc);
 };
 
 #endif // _CLI

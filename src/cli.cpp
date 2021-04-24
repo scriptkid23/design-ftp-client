@@ -41,9 +41,7 @@ void CmdLineInterface::addCmd(const string name, CLI_CMD_FUNC f)
     this->numCommands++;
 }
 
-void CmdLineInterface::initCmd(){
-//
-}
+void CmdLineInterface::initCmd(){}
 
 
 // Doc lenh nhap tu ban phim
@@ -99,8 +97,7 @@ void CmdLineInterface::doUnknown()
 void CmdLineInterface::doQuit()
 {
     this->bRunning = false;
-    cout << "Chuong trinh ket thuc\n";
-
+    cout << endl;
 }
 
 void CmdLineInterface::doCmd(uint8_t id, char * cmd_argv[], int cmd_argc)
