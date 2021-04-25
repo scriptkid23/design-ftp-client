@@ -30,3 +30,20 @@ vector<string> Extensions::str_split(std::string str, char regex){
         }
         return result;
 }
+Response Extensions::convertBufferToResponse(const char* buffer){
+  
+    std::string str(buffer);
+   
+    std::regex regexCRLF("\r\n");
+    auto result = std::regex_replace(str,regexCRLF,"\0");
+   
+    string::size_type pos;
+    pos = result.find(' ',0);
+    std::string code    = result.substr(0,pos);
+    std::string message = result.substr(pos+1);
+    
+    Response response = Response(code,message);
+
+    return response;
+
+}

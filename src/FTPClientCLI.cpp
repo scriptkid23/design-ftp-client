@@ -57,7 +57,7 @@ void FTPClientCLI::doHelp(char* cmd_argv[], int cmd_argc){
         }
         else{
             std::cout << "Commands may be abbreviated.  Commands are:" << endl << endl;
-            std::cout <<  std::setw(30) << std::left << "login <username> [<password>]";
+            std::cout <<  std::setw(30) << std::left << "login";
             std::cout <<  std::setw(20) << std::left << "login to ftp server" << std::endl;
         
             std::cout <<  std::setw(30) << std::left << "help";

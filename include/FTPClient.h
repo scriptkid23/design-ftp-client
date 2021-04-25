@@ -3,8 +3,10 @@
 #define FTPCLIENT_H
 #include "cli.h"
 #include "tcpclient.h"
+
 #include <iostream>
     class FTPClient:public TcpClient{
+        
         public:
             FTPClient();
             void echo(const string &msg);
