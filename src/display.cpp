@@ -15,7 +15,7 @@ void Display::home_screen(){
     std::cout<<"|    ___|  |   |  |    ___|    |      _||   |___ |   ||    ___||  _    |  |   | "       <<std::endl;
     std::cout<<"|   |      |   |  |   |        |     |_ |       ||   ||   |___ | | |   |  |   |"        <<std::endl;
     std::cout<<"|___|      |___|  |___|        |_______||_______||___||_______||_|  |__|  |___| v0.1"   <<std::endl;
-    std::cout<<"Spirity Software" << std::endl << std::endl;
+    std::cout<<"Spirity Software" << std::endl;
 }
 // void Display::help_screen(int key){
 //     if(key == 0){

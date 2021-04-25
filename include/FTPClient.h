@@ -2,17 +2,13 @@
 #ifndef FTPCLIENT_H // include guard
 #define FTPCLIENT_H
 #include "cli.h"
-
-    class FTPClient:public CmdLineInterface
-    {
+#include "tcpclient.h"
+#include <iostream>
+    class FTPClient:public TcpClient{
         public:
             FTPClient();
-            virtual void initCmd();
-        private:
-            void doHelp(char* cmd_argv[], int cmd_argc);
-            void doConnect(char* cmd_argv[], int cmd_argc);
-            void doClear(char* cmd_argv[], int cmd_argc);
-          
+            void echo(const string &msg);
+            void login();
     };
 
 #endif

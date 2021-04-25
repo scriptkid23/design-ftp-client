@@ -25,9 +25,16 @@ bool TcpClient::open(const string& serverHost, unsigned short port)
 
 bool TcpClient::open(const string& serverHost, const string& port)
 {
+    char buffer[256];
     try
     {
         this->localsocket.connect(serverHost,port);
+        /*
+            fix bug: response from server to client not match
+            because: first time response, server will send message code 220
+                     so we add this->localsocket.recv(buffer,256); go to handle;
+        */
+        this->localsocket.recv(buffer,256);
         this->connected = true;
         return true;
 

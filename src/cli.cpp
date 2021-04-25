@@ -131,6 +131,7 @@ void CmdLineInterface::run()
     while (bRunning) // chu trinh chinh - MAIN LOOP
     {
         // hien thi dau nhac lenh
+        cout<< endl;
         showCmdPrompt();
         // nhap lenh
         readCmd(cmdBuf, CMD_BUF_LEN);

@@ -1,31 +1,26 @@
 #include "FTPClient.h"
-#include "iostream"
-#include <iomanip>
 
-FTPClient::FTPClient():CmdLineInterface("spirity> "){};
-
-void FTPClient::initCmd(){
+FTPClient::FTPClient(){};
+void FTPClient::echo(const string &msg){
+    sendStringRequest(msg);
     
-    addCmd("connect", CLI_CAST(&FTPClient::doConnect));
-    addCmd("help", CLI_CAST(&FTPClient::doHelp));
-    addCmd("clear", CLI_CAST(&FTPClient::doClear));
-  
 }
+void FTPClient::login(){
+    
+    std::string username, password, request;
+    std::cout << "Username: ";
+    std::cin >> username;
+    request = "user "+ username + "\r\n";
 
-void FTPClient::doConnect(char* cmd_argv[], int cmd_argc){
+    int bytes;
+    char buffer[256];
 
-}
-void FTPClient::doHelp(char* cmd_argv[], int cmd_argc){
-            std::cout << "Commands may be abbreviated.  Commands are:" << endl << endl;
-            std::cout <<  std::setw(20) << std::left << "connect";
-            std::cout <<  std::setw(20) << std::left << "Connect to FTP server" << std::endl;
-            std::cout <<  std::setw(20) << std::left << "help";
-            std::cout <<  std::setw(20) << std::left << "Print local help information" << std::endl;
-            std::cout <<  std::setw(20) << std::left << "clear";
-            std::cout <<  std::setw(20) << std::left << "Clears the screen" << std::endl;
-            std::cout <<  std::setw(20) << std::left << "quit";
-            std::cout << std::setw(20) << std::left << "Exit the program." << std::endl;
-}
-void FTPClient::doClear(char* cmd_argv[], int cmd_argc){
-    system("cls");
+    sendStringRequest(request);
+    bytes = recvDataBuffer(buffer,255);
+    
+    if(bytes > 0){
+        buffer[bytes] = 0;
+        cout << "Buffer value:" << buffer << endl;
+    }
+
 }
