@@ -8,8 +8,8 @@ int main(){
 	Display dp;
 	dp.home_screen();
 
-	FTPClientCLI ftpClient;
-	ftpClient.initCmd();
-	ftpClient.run();
+	FTPClientCLI client;
+	client.initCmd();
+	client.run();
 	return 0;
 }

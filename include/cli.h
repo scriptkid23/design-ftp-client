@@ -23,7 +23,6 @@ const char CMD_QUIT_NAME[] = "quit";
 class CmdLineInterface;
 
 typedef void (CmdLineInterface::*CLI_CMD_FUNC)(char*[], int);
-
 class CmdLineInterface {
 
     private:

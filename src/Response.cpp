@@ -1,5 +1,7 @@
 #include "Response.h"
 
+Response::Response(){}
+
 Response::Response(std::string code, std::string message){
     this->code = code;
     this->message = message;

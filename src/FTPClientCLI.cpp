@@ -5,10 +5,7 @@
 
 */
 #include "FTPClientCLI.h"
-#include "iostream"
-#include <iomanip>
-#include <sstream>
-#include <stdlib.h>
+
 
 FTPClientCLI::FTPClientCLI():CmdLineInterface("62pm2@spirity> "){};
 
@@ -39,8 +36,8 @@ void FTPClientCLI::doConnect(char* cmd_argv[], int cmd_argc){
     ss >> port;
 
     if(FTPClientCLI::ftpClient.open(hostname,port)){
-        FTPClientCLI::setCmdPrompt("62pm2@spirity "+hostname+">");
-        
+        FTPClientCLI::setCmdPrompt(hostname+"> ");
+        FTPClientCLI::ftpClient.setHostName(hostname);
     };
 }
 void FTPClientCLI::doHelp(char* cmd_argv[], int cmd_argc){
@@ -75,12 +72,14 @@ void FTPClientCLI::doClose(char* cmd_argv[], int cmd_argc){
         FTPClientCLI::setCmdPrompt("62pm2@spirity> ");
     }
 }
+
 void FTPClientCLI::doClear(char* cmd_argv[], int cmd_argc){
     system("cls");
 }
+
 void FTPClientCLI::doLogin(char* cmd_argv[], int cmd_argc){
     if(FTPClientCLI::ftpClient.isConnected()){
-        FTPClientCLI::ftpClient.login();
+        FTPClientCLI::ftpClient.login(this);  
     }
     else{
         cout << "You should connect and login to server for using syntax!" << endl;

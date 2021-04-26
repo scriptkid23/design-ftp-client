@@ -10,6 +10,7 @@
             std::string code;
             std::string message;
         public:
+            Response();
             Response(std::string code, std::string message);
             std::string getCode();
             std::string getMessage();
