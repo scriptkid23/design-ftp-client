@@ -23,6 +23,13 @@ class FTPClient;
             FTPClient();
             void echo(const string &msg);
             void login(CmdLineInterface *callback);
+            /*
+                if you want to using callback function
+                
+                the first:
+                    using callback = void (*)([param1],[param2]);
+                    void login(callback fnc);
+            */
     };
 
 #endif
