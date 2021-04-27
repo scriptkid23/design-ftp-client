@@ -3,7 +3,7 @@
 #define FTPCLIENT_H
 
 #include <cstdint>
-#include "tcpclient.h"
+#include "tcpsocket.h"
 #include <iostream>
 // #include "FTPClientCLI.h"
 #include "cli.h"
@@ -14,15 +14,30 @@ class FTPClient;
 // typedef void (CmdLineInterface::*callback)(std::string);
 
 
-    class FTPClient:public TcpClient{
-        private:
+    class FTPClient{
+       protected:
+            TcpSocket socketControl;
+            TcpSocket socketData;
+
+            bool connected;
             string hostname;
+        
         public:
-            void setHostName(string hostname);
-            string getHostName();
             FTPClient();
+            void connect(const string &hostname, const string &port, CmdLineInterface *callback);
+            void send_string_request(TcpSocket &socket, const string &request);
+            void set_host_name(string hostname);
             void echo(const string &msg);
             void login(CmdLineInterface *callback);
+            void get_list_file();
+
+            bool is_connected();
+            // int recvDataBuffer(char* buffer, unsigned int bufLen);
+            int recv_data_buffer(TcpSocket &socket, char* buffer, unsigned int bufLen);
+            void close();
+
+            string get_host_name();
+            string parse_epsv_response();
             /*
                 if you want to using callback function
                 

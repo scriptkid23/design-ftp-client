@@ -18,6 +18,7 @@ void FTPClientCLI::initCmd(){
     // using if is connected = true
     
     addCmd("login", CLI_CAST(&FTPClientCLI::doLogin));
+    addCmd("ls",CLI_CAST(&FTPClientCLI::doList));
     addCmd("exit", CLI_CAST(&FTPClientCLI::doClose));
   
 }
@@ -35,13 +36,10 @@ void FTPClientCLI::doConnect(char* cmd_argv[], int cmd_argc){
     ss << cmd_argv[2];
     ss >> port;
 
-    if(FTPClientCLI::ftpClient.open(hostname,port)){
-        FTPClientCLI::setCmdPrompt(hostname+"> ");
-        FTPClientCLI::ftpClient.setHostName(hostname);
-    };
+   FTPClientCLI::ftpClient.connect(hostname,port,this);
 }
 void FTPClientCLI::doHelp(char* cmd_argv[], int cmd_argc){
-        if(!FTPClientCLI::ftpClient.isConnected()){
+        if(!FTPClientCLI::ftpClient.is_connected()){
             std::cout << "Commands may be abbreviated.  Commands are:" << endl << endl;
             std::cout <<  std::setw(30) << std::left << "connect <hostname> <port>";
             std::cout <<  std::setw(20) << std::left << "Connect to FTP server" << std::endl;
@@ -67,7 +65,7 @@ void FTPClientCLI::doHelp(char* cmd_argv[], int cmd_argc){
             
 }
 void FTPClientCLI::doClose(char* cmd_argv[], int cmd_argc){
-    if(FTPClientCLI::ftpClient.isConnected()){
+    if(FTPClientCLI::ftpClient.is_connected()){
         FTPClientCLI::ftpClient.close();
         FTPClientCLI::setCmdPrompt("62pm2@spirity> ");
     }
@@ -78,11 +76,14 @@ void FTPClientCLI::doClear(char* cmd_argv[], int cmd_argc){
 }
 
 void FTPClientCLI::doLogin(char* cmd_argv[], int cmd_argc){
-    if(FTPClientCLI::ftpClient.isConnected()){
+    if(FTPClientCLI::ftpClient.is_connected()){
         FTPClientCLI::ftpClient.login(this);  
     }
     else{
         cout << "You should connect and login to server for using syntax!" << endl;
     }
    
+}
+void FTPClientCLI::doList(char* cmd_argv[], int cmd_argc){
+        FTPClientCLI::ftpClient.get_list_file();
 }

@@ -24,6 +24,7 @@ class FTPClientCLI: public CmdLineInterface{
             void doConnect(char* cmd_argv[], int cmd_argc);
             void doClear(char* cmd_argv[], int cmd_argc);
             void doLogin(char* cmd_argv[], int cmd_argc);
+            void doList(char* cmd_argv[], int cmd_argc);
 };
 
 #endif
