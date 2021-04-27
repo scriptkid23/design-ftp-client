@@ -59,7 +59,7 @@ int main(int argc , char *argv[])
 
 			cout << "Username: ";
 			getline(cin,user);
-
+			cout << "type";
 			cout << "Password: ";
 			HANDLE hStdin = GetStdHandle(STD_INPUT_HANDLE);
 			DWORD mode = 0;
