@@ -30,10 +30,16 @@ class FTPClient;
             void login(CmdLineInterface *callback);
             void get_list_file();
             void close();
-
+            void change_current_working_directory();
+            void delete_directory();
+            void create_directory();
+            void rename_directory_or_file();
+            void delete_file();
+            void download();
+            void upload();
+       
             bool is_connected();
-            
-
+        
             string get_host_name();
             string parse_epsv_response();
             /*
