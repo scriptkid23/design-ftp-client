@@ -60,7 +60,7 @@ void FTPClient::login(CmdLineInterface *callback){
 
     socketControl.send(request);
 
-    bytes = socketControl.recv(buffer,256);
+    bytes = socketControl.recv(buffer,255);
     buffer[bytes] = 0;
 
     res =  Extensions::convertBufferToResponse(buffer);
@@ -72,7 +72,7 @@ void FTPClient::login(CmdLineInterface *callback){
         request = "pass "+password+"\r\n";
 
         socketControl.send(request);
-        bytes = socketControl.recv(buffer,256);
+        bytes = socketControl.recv(buffer,255);
         buffer[bytes] = 0;
 
         res =  Extensions::convertBufferToResponse(buffer);
@@ -95,9 +95,9 @@ void FTPClient::login(CmdLineInterface *callback){
 }
 string FTPClient::parse_epsv_response(){
     socketControl.send("EPSV\r\n");
-
+    
     char buffer[256];
-    int bytes = socketControl.recv(buffer,256);
+    int bytes = socketControl.recv(buffer,255);
     buffer[bytes] = 0;
 
     // cout << buffer;
@@ -107,16 +107,31 @@ string FTPClient::parse_epsv_response(){
     std::smatch m;
     std::string str = res.getMessage();
     regex_search(str, m, rx);
-    string port = m[0];
-    return port;
+
+    return m[0];
+    
     
 }
 void FTPClient::get_list_file(){
     try{
-        
+        char buffer[256];
+        int bytes;
+
         string port = parse_epsv_response();
+
         socketData.connect(hostname, port);        
-    
+        
+        //TODO: fix bug NLST
+        socketControl.send("NLST\r\n");
+        // Beacause response of NLST return 2 response 
+        socketControl.recv(buffer,255);
+        socketControl.recv(buffer,255);
+        
+        bytes = socketData.recv(buffer,255);
+
+        buffer[bytes] = 0;
+        cout << buffer << endl;
+        socketData.close();
     }
     catch(SocketException& e){
         cout << e.what() << endl;
