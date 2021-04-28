@@ -23,6 +23,9 @@ or ``` tdm-gcc-9.2.0.exe``` if you use to os 32bit
 ### The third:
 
 - Run file `build.bat`
+## Run
+
+You go to folder `build` run file `ftpclient`
 ## Note
 
-After completing the installation steps, from now on every time we want to run the program just open the `ftpclient.bat` file.
+After completing the installation steps, from now on every time we want to run the program just open the `ftpclient.bat` file or `build.bat` file.
