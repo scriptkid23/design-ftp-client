@@ -47,6 +47,8 @@ string FTPClient::get_host_name(){
 
 void FTPClient::login(CmdLineInterface *callback){
     
+    if(!is_connected()) throw SocketException("You should connect!");
+
     std::string username, password, request, prompt;
     Response res;
 
@@ -113,6 +115,8 @@ string FTPClient::parse_epsv_response(){
     
 }
 void FTPClient::get_list_file(){
+    if(!is_connected()) throw SocketException("You should connect and login!");
+
     try{
         char buffer[256];
         int bytes;
@@ -125,12 +129,15 @@ void FTPClient::get_list_file(){
         socketControl.send("NLST\r\n");
         // Beacause response of NLST return 2 response 
         socketControl.recv(buffer,255);
-        socketControl.recv(buffer,255);
         
-        bytes = socketData.recv(buffer,255);
+        cout << "Info:" << buffer << endl;
+        socketControl.recv(buffer,255);
+        cout << "Info:" << buffer << endl;
 
+        bytes = socketData.recv(buffer,255);
         buffer[bytes] = 0;
         cout << buffer << endl;
+
         socketData.close();
     }
     catch(SocketException& e){

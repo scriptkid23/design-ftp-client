@@ -76,14 +76,19 @@ void FTPClientCLI::doClear(char* cmd_argv[], int cmd_argc){
 }
 
 void FTPClientCLI::doLogin(char* cmd_argv[], int cmd_argc){
-    if(FTPClientCLI::ftpClient.is_connected()){
+   
+    try{
         FTPClientCLI::ftpClient.login(this);  
-    }
-    else{
-        cout << "You should connect and login to server for using syntax!" << endl;
+    }catch(SocketException &e){
+        cerr << e.what() << endl;
     }
    
 }
 void FTPClientCLI::doList(char* cmd_argv[], int cmd_argc){
-        FTPClientCLI::ftpClient.get_list_file();
+        
+        try{
+            FTPClientCLI::ftpClient.get_list_file();
+        }catch(SocketException &e){
+            cerr << e.what() << endl;
+        }
 }

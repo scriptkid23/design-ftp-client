@@ -59,7 +59,7 @@ void CmdLineInterface::readCmd(char * sCmdBuf, int buflen)
 uint8_t CmdLineInterface::parseCmd(char *sCmdBuf, char * cmd_argv[], int& cmd_argc)
 {
     // phan tich xau ki tu nguoi dung nhap vao de xac dinh lenh va tham so
-
+    this->syntax = sCmdBuf;
     // Cu phap:  <ten lenh>space<tham so 1>space<tham so 2>
     //           Moi thanh phan cua lenh cach nhau 1 hoac nhieu dau space
     char * arg;
@@ -90,7 +90,7 @@ uint8_t CmdLineInterface::parseCmd(char *sCmdBuf, char * cmd_argv[], int& cmd_ar
 // ham thuc hien khi lenh khong dung "unknown"
 void CmdLineInterface::doUnknown()
 {
-    cerr << "Lenh khong duoc ho tro\nGo lenh help de duoc tro giup\n";
+    cerr << "'"<<this->syntax <<"' "<<"is not recognized as an internal or external command, Please type 'help'" << endl;
 }
 
 // ham thuc hien lenh "quit"

@@ -32,6 +32,7 @@ class CmdLineInterface {
         bool bRunning;
         uint8_t numCommands;
         string  cmdNameList[CMD_MAX_NUM];
+        char *syntax;
 
     public:
         CmdLineInterface();

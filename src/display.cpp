@@ -15,7 +15,17 @@ void Display::home_screen(){
     std::cout<<"|    ___|  |   |  |    ___|    |      _||   |___ |   ||    ___||  _    |  |   | "       <<std::endl;
     std::cout<<"|   |      |   |  |   |        |     |_ |       ||   ||   |___ | | |   |  |   |"        <<std::endl;
     std::cout<<"|___|      |___|  |___|        |_______||_______||___||_______||_|  |__|  |___| v0.1"   <<std::endl;
-    std::cout<<"Spirity Software" << std::endl;
+    std::cout<<"Spirity Company" << std::endl;
+
+    std::cout << "Commands may be abbreviated.  Commands are:" << std::endl << std::endl;
+    std::cout <<  std::setw(30) << std::left << "connect <hostname> <port>";
+    std::cout <<  std::setw(20) << std::left << "Connect to FTP server" << std::endl;
+    std::cout <<  std::setw(30) << std::left << "help";
+    std::cout <<  std::setw(20) << std::left << "Print local help information" << std::endl;
+    std::cout <<  std::setw(30) << std::left << "clear";
+    std::cout <<  std::setw(20) << std::left << "Clears the screen" << std::endl;
+    std::cout <<  std::setw(30) << std::left << "quit";
+    std::cout <<  std::setw(20) << std::left << "Exit the program." << std::endl;
 }
 // void Display::help_screen(int key){
 //     if(key == 0){
