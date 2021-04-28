@@ -34,19 +34,20 @@ class FTPClient;
             void login(CmdLineInterface *callback);
             void get_list_file();
             void close();
-            void change_current_working_directory();
-            void delete_directory();
-            void create_directory();
-            void rename_directory_or_file();
-            void delete_file();
-            void download();
-            void upload();
+            void change_current_working_directory(const string &directory);
+            void delete_directory(const string &directory);
+            void create_directory(const string &directory);
+            void rename_directory_or_file(const string &src, const string &dest);
+            void delete_file(const string &directory);
+            void download(const string &filename);
+            void upload(const string &filename);
        
             bool is_connected();
             bool is_login();
         
             string get_host_name();
             string parse_epsv_response();
+            
             /*
                 if you want to using callback function
                 
