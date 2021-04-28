@@ -10,7 +10,7 @@ or ``` tdm-gcc-9.2.0.exe``` if you use to os 32bit
 
 ### The second:
 
-- run Cmake(cmake-gui)
+- Run Cmake(cmake-gui)
 
     Step 1: In field **Where is the source code** click **Browser Source...** and select folder `design-ftp-client`
     
@@ -22,13 +22,7 @@ or ``` tdm-gcc-9.2.0.exe``` if you use to os 32bit
 
 ### The third:
 
-Step 1: open **cmd** in folder `design-ftp-client/build` (you can view [tutorial](https://www.youtube.com/watch?v=bgSSJQolR0E))
-
-Step 2 : in **cmd** you type
-```bash
-cmake --build .
-ftpclient
-```
+- Run file `build.bat`
 ## Note
 
 After completing the installation steps, from now on every time we want to run the program just open the `ftpclient.bat` file.
