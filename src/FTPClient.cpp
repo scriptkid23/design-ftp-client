@@ -159,9 +159,6 @@ void FTPClient::get_list_file()
     if (!is_connected() && !is_login())
         throw SocketException("You should connect and login!");
 
-   
-        char buffer[256];
-        int bytes;
 
         string port = parse_epsv_response();
 
@@ -187,3 +184,22 @@ void FTPClient::get_present_working_directory()
     socketControl.send("PWD\r\n");
     cout << get_receive_socket_control().getMessage();
 };
+void FTPClient::get_directory(){
+    if (!is_connected() && !is_login())
+        throw SocketException("You should connect and login!");
+    
+    string port = parse_epsv_response();
+
+    socketData.connect(hostname, port);
+
+    socketControl.send("LIST\r\n");
+
+    get_receive_socket_control();
+    get_receive_socket_control();
+
+    cout << get_receive_socket_data();
+
+    socketData.close();
+
+
+}

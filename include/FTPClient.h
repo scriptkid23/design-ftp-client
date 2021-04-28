@@ -42,6 +42,7 @@ class FTPClient;
             void download(const string &filename);
             void upload(const string &filename);
             void get_present_working_directory();
+            void get_directory();
             bool is_connected();
             bool is_login();
         

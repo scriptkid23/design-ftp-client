@@ -33,6 +33,7 @@ class FTPClientCLI: public CmdLineInterface{
             void doDownload(char* cmd_argv[], int cmd_argc);
             void doUpload(char* cmd_argv[], int cmd_argc);
             void doPWD(char* cmd_argv[], int cmd_argc);
+            void doDIR(char* cmd_argv[], int cmd_argc);
             
 };
 

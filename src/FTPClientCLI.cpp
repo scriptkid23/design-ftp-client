@@ -19,6 +19,7 @@ void FTPClientCLI::initCmd()
 
     addCmd("login", CLI_CAST(&FTPClientCLI::doLogin));
     addCmd("ls", CLI_CAST(&FTPClientCLI::doList));
+    addCmd("dir", CLI_CAST(&FTPClientCLI::doDIR));
     addCmd("pwd", CLI_CAST(&FTPClientCLI::doPWD));
     addCmd("cd", CLI_CAST(&FTPClientCLI::doCWD));
     addCmd("rmdir", CLI_CAST(&FTPClientCLI::doDeleteDirectory));
@@ -64,12 +65,13 @@ void FTPClientCLI::doHelp(char *cmd_argv[], int cmd_argc)
     }
     else
     {
-        std::cout << "Commands may be abbreviated.  Commands are:" << endl
-                  << endl;
+        std::cout << "Commands may be abbreviated.  Commands are:" << endl << endl;
         std::cout << std::setw(30) << std::left << "login";
         std::cout << std::setw(20) << std::left << "login to ftp server" << std::endl;
         std::cout << std::setw(30) << std::left << "ls";
         std::cout << std::setw(20) << std::left << "Show list directory or file" << std::endl;
+        std::cout << std::setw(30) << std::left << "dir";
+        std::cout << std::setw(20) << std::left << "Displays a list of files and subdirectories in a directory." << std::endl;
         std::cout << std::setw(30) << std::left << "pwd";
         std::cout << std::setw(20) << std::left << "Show present working directory." << std::endl;
         std::cout << std::setw(30) << std::left << "cd";
@@ -170,5 +172,15 @@ void FTPClientCLI::doPWD(char *cmd_argv[], int cmd_argc)
         cerr << "ERROR: " << e.what() << endl;
         SetConsoleTextAttribute(console, COLOR_DEFAULT);
        
+    }
+}
+void FTPClientCLI::doDIR(char *cmd_argv[], int cmd_argc){
+    try{
+        FTPClientCLI::ftpClient.get_directory();
+    }
+    catch(SocketException &e){
+        SetConsoleTextAttribute(console, COLOR_ERROR);
+        cerr << "ERROR: " << e.what() << endl;
+        SetConsoleTextAttribute(console, COLOR_DEFAULT);
     }
 }
