@@ -25,16 +25,14 @@ class FTPClient;
         public:
             FTPClient();
             void connect(const string &hostname, const string &port, CmdLineInterface *callback);
-            void send_string_request(TcpSocket &socket, const string &request);
             void set_host_name(string hostname);
             void echo(const string &msg);
             void login(CmdLineInterface *callback);
             void get_list_file();
+            void close();
 
             bool is_connected();
-            // int recvDataBuffer(char* buffer, unsigned int bufLen);
-            int recv_data_buffer(TcpSocket &socket, char* buffer, unsigned int bufLen);
-            void close();
+            
 
             string get_host_name();
             string parse_epsv_response();

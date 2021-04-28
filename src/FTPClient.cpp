@@ -45,30 +45,6 @@ string FTPClient::get_host_name(){
     return this->hostname;
 }
 
-void FTPClient::send_string_request(TcpSocket &socket, const string &request){
-    try
-    {
-        socket.send(request);
-
-    }
-    catch(SocketException& e)
-    {
-        cerr << e.what();
-    }
-}
-int FTPClient::recv_data_buffer(TcpSocket &socket,char* buffer, unsigned int bufLen){
-    int bytes;
-    try
-    {
-        bytes = socket.recv(buffer, bufLen);
-        return bytes;
-    }
-    catch(SocketException& e)
-    {
-        cerr << e.what() << endl;
-        return -1;
-    }
-}
 void FTPClient::login(CmdLineInterface *callback){
     
     std::string username, password, request, prompt;
@@ -82,9 +58,9 @@ void FTPClient::login(CmdLineInterface *callback){
     int bytes;
     char buffer[256];
 
-    send_string_request(socketControl,request);
+    socketControl.send(request);
 
-    bytes = recv_data_buffer(socketControl,buffer,255);
+    bytes = socketControl.recv(buffer,256);
     buffer[bytes] = 0;
 
     res =  Extensions::convertBufferToResponse(buffer);
@@ -95,8 +71,8 @@ void FTPClient::login(CmdLineInterface *callback){
         std::cin >> password;
         request = "pass "+password+"\r\n";
 
-        send_string_request(socketControl,request);
-        bytes = recv_data_buffer(socketControl,buffer,255);
+        socketControl.send(request);
+        bytes = socketControl.recv(buffer,256);
         buffer[bytes] = 0;
 
         res =  Extensions::convertBufferToResponse(buffer);
@@ -118,10 +94,10 @@ void FTPClient::login(CmdLineInterface *callback){
 
 }
 string FTPClient::parse_epsv_response(){
-    send_string_request(socketControl,"EPSV\r\n");
+    socketControl.send("EPSV\r\n");
 
     char buffer[256];
-    int bytes = recv_data_buffer(socketControl,buffer,256);
+    int bytes = socketControl.recv(buffer,256);
     buffer[bytes] = 0;
 
     // cout << buffer;
@@ -139,18 +115,7 @@ void FTPClient::get_list_file(){
     try{
         
         string port = parse_epsv_response();
-        socketData.connect(hostname, port);
-
-        char buffer[256];
-        send_string_request(socketControl,"NLST\r\n");
-
-        int bytes = recv_data_buffer(socketData,buffer,256);
-        buffer[bytes] = 0;
-
-        Response res = Extensions::convertBufferToResponse(buffer);
-        cout << res.getMessage() << endl;
-
-        
+        socketData.connect(hostname, port);        
     
     }
     catch(SocketException& e){
