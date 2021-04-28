@@ -9,7 +9,7 @@
 #include "Extensions.h"
 #include "cli.h"
 #include "constants.h"
-
+#include "Response.h"
 
 class FTPClient;
 
@@ -33,7 +33,7 @@ class FTPClient;
             void echo(const string &msg);
             void login(CmdLineInterface *callback);
             void get_list_file();
-            void close();
+            void close(CmdLineInterface *callback);
             void change_current_working_directory(const string &directory);
             void delete_directory(const string &directory);
             void create_directory(const string &directory);
@@ -41,13 +41,14 @@ class FTPClient;
             void delete_file(const string &directory);
             void download(const string &filename);
             void upload(const string &filename);
-       
+            void get_present_working_directory();
             bool is_connected();
             bool is_login();
         
-            string get_host_name();
-            string parse_epsv_response();
-            
+            string      get_host_name();
+            string      parse_epsv_response();
+            string      get_receive(); // get value from socket data
+            Response    get_message(); // get message from socket control 
             /*
                 if you want to using callback function
                 

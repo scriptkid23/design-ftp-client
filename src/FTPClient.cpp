@@ -30,7 +30,7 @@ void FTPClient::connect(const string &hostname, const string &port, CmdLineInter
         SetConsoleTextAttribute(console, COLOR_DEFAULT);
     }
 }
-void FTPClient::close()
+void FTPClient::close(CmdLineInterface *callback)
 {
     try
     {
@@ -42,6 +42,7 @@ void FTPClient::close()
     }
     this->connected = false;
     this->isLogin = false;
+    callback->setCmdPrompt("62pm2@spirity> ");
 }
 bool FTPClient::is_connected()
 {
@@ -75,16 +76,11 @@ void FTPClient::login(CmdLineInterface *callback)
     std::cin >> username;
     request = "user " + username + "\r\n";
 
-    int bytes;
-    char buffer[256];
-
     socketControl.send(request);
 
-    bytes = socketControl.recv(buffer, 255);
-    buffer[bytes] = 0;
+    res = get_message();
 
-    res = Extensions::convertBufferToResponse(buffer);
-    if (bytes > 0)
+    if (res.getCode() == "331")
     {
 
         std::cout << "Password: ";
@@ -92,10 +88,7 @@ void FTPClient::login(CmdLineInterface *callback)
         request = "pass " + password + "\r\n";
 
         socketControl.send(request);
-        bytes = socketControl.recv(buffer, 255);
-        buffer[bytes] = 0;
-
-        res = Extensions::convertBufferToResponse(buffer);
+        res = get_message();
 
         if (res.getCode() == "230")
         {
@@ -120,12 +113,7 @@ string FTPClient::parse_epsv_response()
 {
     socketControl.send("EPSV\r\n");
 
-    char buffer[256];
-    int bytes = socketControl.recv(buffer, 255);
-    buffer[bytes] = 0;
-
-    // cout << buffer;
-    Response res = Extensions::convertBufferToResponse(buffer);
+    Response res = get_message();
 
     std::regex rx(R"([[:digit:]]+)");
     std::smatch m;
@@ -134,13 +122,44 @@ string FTPClient::parse_epsv_response()
 
     return m[0];
 }
+string FTPClient::get_receive()
+{
+    int bytes;
+    char buffer[255];
+    string result;
+    while (true)
+    {
+        if ((bytes = socketData.recv(buffer, 255)) == -1)
+        {
+            std::cout << "recv error: " << strerror(errno) << std::endl;
+            exit(1);
+        }
+        if (bytes == 0)
+        {
+            break;
+        }
+        for (int i = 0; i < bytes; i++)
+        {
+            result += buffer[i];
+        }
+    }
+    return result;
+}
+Response FTPClient::get_message()
+{
+
+    char buffer[255];
+    int bytes = socketControl.recv(buffer, 255);
+    buffer[bytes] = 0;
+
+    return Extensions::convertBufferToResponse(buffer);
+};
 void FTPClient::get_list_file()
 {
     if (!is_connected() && !is_login())
         throw SocketException("You should connect and login!");
 
-    try
-    {
+   
         char buffer[256];
         int bytes;
 
@@ -148,29 +167,23 @@ void FTPClient::get_list_file()
 
         socketData.connect(hostname, port);
 
-        //TODO: fix bug NLST
         socketControl.send("NLST\r\n");
+
         // Beacause response of NLST return 2 response
-        bytes = socketControl.recv(buffer, 255);
-        buffer[bytes] = 0;
+        get_message();
+        get_message();
 
-        SetConsoleTextAttribute(console, COLOR_PRIMARY);
-        cout << "INFO: " << buffer;
-        bytes = socketControl.recv(buffer, 255);
-        buffer[bytes] = 0;
-        cout << "INFO: " << buffer;
-        SetConsoleTextAttribute(console, COLOR_DEFAULT);
+        // get result from socket data
+        cout << get_receive();
 
-        cout << "List directory or file:" << endl;
-        bytes = socketData.recv(buffer, 255);
-        buffer[bytes] = 0;
-
-        cout << buffer << endl;
-
+        // close socket data
         socketData.close();
-    }
-    catch (SocketException &e)
-    {
-        cerr << "ERROR: " << e.what() << endl;
-    }
 }
+void FTPClient::get_present_working_directory()
+{
+    if (!is_connected() && !is_login())
+        throw SocketException("You should connect and login!");
+
+    socketControl.send("PWD\r\n");
+    cout << get_message().getMessage();
+};
