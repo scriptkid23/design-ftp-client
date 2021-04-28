@@ -1,9 +1,9 @@
 #include "FTPClient.h"
 
-
 FTPClient::FTPClient()
 {
     connected = false;
+    isLogin = false;
 };
 
 void FTPClient::connect(const string &hostname, const string &port, CmdLineInterface *callback)
@@ -24,9 +24,9 @@ void FTPClient::connect(const string &hostname, const string &port, CmdLineInter
         SetConsoleTextAttribute(console, COLOR_DEFAULT);
     }
     catch (SocketException &e)
-    {   
+    {
         SetConsoleTextAttribute(console, COLOR_ERROR);
-        cerr <<"ERROR: "<<e.what() << endl;
+        cerr << "ERROR: " << e.what() << endl;
         SetConsoleTextAttribute(console, COLOR_DEFAULT);
     }
 }
@@ -38,13 +38,18 @@ void FTPClient::close()
     }
     catch (SocketException &e)
     {
-        cerr <<"ERROR: "<<e.what() << endl;
+        cerr << "ERROR: " << e.what() << endl;
     }
     this->connected = false;
+    this->isLogin = false;
 }
 bool FTPClient::is_connected()
 {
     return this->connected;
+}
+bool FTPClient::is_login()
+{
+    return this->isLogin;
 }
 
 void FTPClient::set_host_name(string hostname)
@@ -95,18 +100,20 @@ void FTPClient::login(CmdLineInterface *callback)
         if (res.getCode() == "230")
         {
             prompt = this->hostname + " " + username + "> ";
+            isLogin = true;
             callback->setCmdPrompt(prompt);
         }
         else
         {
             cout << "Message: " << res.getMessage() << endl;
             prompt = this->hostname + "> ";
+            isLogin = false;
             callback->setCmdPrompt(prompt);
         }
     }
     else
     {
-        cerr << "Error: "<< res.getMessage() << endl;
+        cerr << "Error: " << res.getMessage() << endl;
     }
 }
 string FTPClient::parse_epsv_response()
@@ -129,7 +136,7 @@ string FTPClient::parse_epsv_response()
 }
 void FTPClient::get_list_file()
 {
-    if (!is_connected())
+    if (!is_connected() && !is_login())
         throw SocketException("You should connect and login!");
 
     try
@@ -164,6 +171,6 @@ void FTPClient::get_list_file()
     }
     catch (SocketException &e)
     {
-        cerr <<"ERROR: "<<e.what() << endl;
+        cerr << "ERROR: " << e.what() << endl;
     }
 }

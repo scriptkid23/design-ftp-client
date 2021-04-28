@@ -23,6 +23,7 @@ class FTPClient;
             TcpSocket socketData;
             HANDLE console = GetStdHandle(STD_OUTPUT_HANDLE); 
             bool connected;
+            bool isLogin;
             string hostname;
         
         public:
@@ -42,6 +43,7 @@ class FTPClient;
             void upload();
        
             bool is_connected();
+            bool is_login();
         
             string get_host_name();
             string parse_epsv_response();
