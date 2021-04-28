@@ -10,5 +10,9 @@
 #define EXIT        "exit"
 #define HELP        "help"
 
-#define USER        "123"
-#define PASS        "123"
+
+#define COLOR_DEFAULT   15
+#define COLOR_INFO      2
+#define COLOR_DANGER    12
+#define COLOR_PRIMARY   9
+#define COLOR_ERROR     5

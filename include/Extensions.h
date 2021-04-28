@@ -5,6 +5,12 @@
 
 #include "Response.h"
 #include <regex>
+#include <iostream>
+#include <vector>
+#include <sstream>
+#include <string>
+#include <algorithm>
+
     class  Extensions
     {   
         public:

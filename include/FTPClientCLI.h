@@ -8,7 +8,7 @@
 #include <iomanip>
 #include <sstream>
 #include <stdlib.h>
-
+#include "constants.h"
 
 class FTPClientCLI: public CmdLineInterface{
         public:

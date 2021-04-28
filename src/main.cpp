@@ -1,8 +1,5 @@
-#include <iostream>
 #include "FTPClientCLI.h"
 #include "Display.h"
-using namespace std; 
-
 
 int main(){
 	Display dp;

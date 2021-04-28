@@ -3,6 +3,8 @@
 
 #include <cstdint>
 #include <string>
+#include <windows.h>
+#include "constants.h"
 
 using namespace std;
 
@@ -33,7 +35,8 @@ class CmdLineInterface {
         uint8_t numCommands;
         string  cmdNameList[CMD_MAX_NUM];
         char *syntax;
-
+    protected:
+        HANDLE console = GetStdHandle(STD_OUTPUT_HANDLE);
     public:
         CmdLineInterface();
         CmdLineInterface(string prompt);

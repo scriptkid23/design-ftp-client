@@ -3,10 +3,13 @@
 #define FTPCLIENT_H
 
 #include <cstdint>
-#include "tcpsocket.h"
 #include <iostream>
-// #include "FTPClientCLI.h"
+#include <windows.h> 
+#include "tcpsocket.h"
+#include "Extensions.h"
 #include "cli.h"
+#include "constants.h"
+
 
 class FTPClient;
 
@@ -18,7 +21,7 @@ class FTPClient;
        protected:
             TcpSocket socketControl;
             TcpSocket socketData;
-
+            HANDLE console = GetStdHandle(STD_OUTPUT_HANDLE); 
             bool connected;
             string hostname;
         

@@ -101,7 +101,9 @@ void FTPClientCLI::doLogin(char* cmd_argv[], int cmd_argc){
     try{
         FTPClientCLI::ftpClient.login(this);  
     }catch(SocketException &e){
+        SetConsoleTextAttribute(console, COLOR_ERROR);
         cerr << e.what() << endl;
+        SetConsoleTextAttribute(console, COLOR_DEFAULT);
     }
    
 }

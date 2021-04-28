@@ -31,7 +31,9 @@ void CmdLineInterface::setCmdPrompt(const string prompt)
 // Hien thi dau nhac lenh
 void CmdLineInterface::showCmdPrompt()
 {
+    SetConsoleTextAttribute(console, COLOR_INFO);
     cout << this->cmdPrompt ;
+    SetConsoleTextAttribute(console, COLOR_DEFAULT);
 }
 
 void CmdLineInterface::addCmd(const string name, CLI_CMD_FUNC f)
