@@ -78,7 +78,7 @@ void FTPClient::login(CmdLineInterface *callback)
 
     socketControl.send(request);
 
-    res = get_message();
+    res = get_receive_socket_control();
 
     if (res.getCode() == "331")
     {
@@ -88,7 +88,7 @@ void FTPClient::login(CmdLineInterface *callback)
         request = "pass " + password + "\r\n";
 
         socketControl.send(request);
-        res = get_message();
+        res = get_receive_socket_control();
 
         if (res.getCode() == "230")
         {
@@ -113,7 +113,7 @@ string FTPClient::parse_epsv_response()
 {
     socketControl.send("EPSV\r\n");
 
-    Response res = get_message();
+    Response res = get_receive_socket_control();
 
     std::regex rx(R"([[:digit:]]+)");
     std::smatch m;
@@ -122,7 +122,7 @@ string FTPClient::parse_epsv_response()
 
     return m[0];
 }
-string FTPClient::get_receive()
+string FTPClient::get_receive_socket_data()
 {
     int bytes;
     char buffer[255];
@@ -145,7 +145,7 @@ string FTPClient::get_receive()
     }
     return result;
 }
-Response FTPClient::get_message()
+Response FTPClient::get_receive_socket_control()
 {
 
     char buffer[255];
@@ -170,11 +170,11 @@ void FTPClient::get_list_file()
         socketControl.send("NLST\r\n");
 
         // Beacause response of NLST return 2 response
-        get_message();
-        get_message();
+        get_receive_socket_control();
+        get_receive_socket_control();
 
         // get result from socket data
-        cout << get_receive();
+        cout << get_receive_socket_data();
 
         // close socket data
         socketData.close();
@@ -185,5 +185,5 @@ void FTPClient::get_present_working_directory()
         throw SocketException("You should connect and login!");
 
     socketControl.send("PWD\r\n");
-    cout << get_message().getMessage();
+    cout << get_receive_socket_control().getMessage();
 };

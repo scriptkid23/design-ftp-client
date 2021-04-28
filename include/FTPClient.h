@@ -47,8 +47,8 @@ class FTPClient;
         
             string      get_host_name();
             string      parse_epsv_response();
-            string      get_receive(); // get value from socket data
-            Response    get_message(); // get message from socket control 
+            string      get_receive_socket_data(); // get value from socket data
+            Response    get_receive_socket_control(); // get message from socket control 
             /*
                 if you want to using callback function
                 
