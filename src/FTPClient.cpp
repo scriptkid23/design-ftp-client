@@ -249,15 +249,19 @@ void FTPClient::upload(const string &source){
         throw SocketException("You should connect and login!");
     
     Response res;
-    std::ifstream in(source.c_str(), std::ios::in | std::ios::binary | std::ios::ate);
+    std::ifstream file(source, std::ios::in | std::ios::binary | std::ios::ate);
 
-    if(in){
-        long length = in.tellg();
-		in.seekg (0, in.beg);
-		
+    if(file){
+        long length = file.tellg();
+		file.seekg (0, file.beg);
+
         string port = parse_epsv_response();
 
         socketData.connect(hostname, port);
+
+        socketControl.send("TYPE I\r\n");
+        res = get_receive_socket_control();
+        if(res.getCode() != "200") return;
 
         string request = "STOR "+source+"\r\n";
 
@@ -269,6 +273,21 @@ void FTPClient::upload(const string &source){
         SetConsoleTextAttribute(console, COLOR_PRIMARY);
         std::cout<<"INFO: Sending File : "<<source<<"..."<<std::endl;
         SetConsoleTextAttribute(console, COLOR_DEFAULT);
+        
+        string data;
+		double c_length = length;
+
+        while (length > 0){
+			int read_sz = 2048 <length ? 2048 : length;
+			char buffer[2048+1];
+			
+            file.read(buffer,read_sz);
+			data.assign(buffer,read_sz);
+            
+			socketData.send(data);
+			length -= read_sz;
+		}
+        socketData.close();
 
         res = get_receive_socket_control();
         if(res.getCode() == "226"){
@@ -283,8 +302,8 @@ void FTPClient::upload(const string &source){
             SetConsoleTextAttribute(console, COLOR_DEFAULT);
            
         }
-        in.close();
-        socketData.close();
+        file.close();
+        
     }
     else{
         SetConsoleTextAttribute(console, COLOR_ERROR);
