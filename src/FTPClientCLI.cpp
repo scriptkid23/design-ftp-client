@@ -156,9 +156,35 @@ void FTPClientCLI::doDeleteFile(char *cmd_argv[], int cmd_argc){
 };
 void FTPClientCLI::doDownload(char *cmd_argv[], int cmd_argc){
     //TODO: code here;
+    try{
+            std::string filename;
+            std::stringstream ss;
+
+            ss << cmd_argv[1];
+            ss >> filename;
+            FTPClientCLI::ftpClient.download(filename);
+    }
+    catch(SocketException &e){
+        SetConsoleTextAttribute(console, COLOR_ERROR);
+        cerr << "ERROR: " << e.what() << endl;
+        SetConsoleTextAttribute(console, COLOR_DEFAULT);
+    }
 };
 void FTPClientCLI::doUpload(char *cmd_argv[], int cmd_argc){
     //TODO: code here;
+    try{
+            std::string filename;
+            std::stringstream ss;
+
+            ss << cmd_argv[1];
+            ss >> filename;
+            FTPClientCLI::ftpClient.upload(filename);
+    }
+    catch(SocketException &e){
+        SetConsoleTextAttribute(console, COLOR_ERROR);
+        cerr << "ERROR: " << e.what() << endl;
+        SetConsoleTextAttribute(console, COLOR_DEFAULT);
+    }
 };
 void FTPClientCLI::doPWD(char *cmd_argv[], int cmd_argc)
 {

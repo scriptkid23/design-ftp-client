@@ -10,7 +10,7 @@
 #include "cli.h"
 #include "constants.h"
 #include "Response.h"
-
+#include <fstream>
 class FTPClient;
 
 // using callback = void (CmdLineInterface::*)(std::string);

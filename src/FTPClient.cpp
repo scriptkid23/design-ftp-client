@@ -20,7 +20,7 @@ void FTPClient::connect(const string &hostname, const string &port, CmdLineInter
 
         this->connected = true;
         SetConsoleTextAttribute(console, COLOR_PRIMARY);
-        cout << "INFO: Connect to server succeeded !" << endl;
+        cout << "INFO: Connect to server succeeded." << endl;
         SetConsoleTextAttribute(console, COLOR_DEFAULT);
     }
     catch (SocketException &e)
@@ -202,4 +202,94 @@ void FTPClient::get_directory(){
     socketData.close();
 
 
+}
+void FTPClient::download(const string &filename){
+    if (!is_connected() && !is_login())
+        throw SocketException("You should connect and login!");
+    
+    string port = parse_epsv_response();
+
+    socketData.connect(hostname, port);
+
+    string request = "RETR "+filename+"\r\n";
+    socketControl.send(request);
+
+    get_receive_socket_control();
+    get_receive_socket_control();
+
+    SetConsoleTextAttribute(console, COLOR_PRIMARY);
+    cout << "INFO: Download File: " <<filename<<"..."<< endl;
+    SetConsoleTextAttribute(console, COLOR_DEFAULT);
+
+    FILE *file;    
+
+
+    char *source = const_cast<char*>((filename).c_str());
+    file = fopen(source,"wb");
+    
+    int bytes;
+    char buffer[4096];
+    while(true){
+        if((bytes =socketData.recv(buffer,4096)) == -1){
+            std::cout << "recv error: " << strerror(errno) << std::endl;
+        }
+        if(bytes == 0){
+            SetConsoleTextAttribute(console, COLOR_PRIMARY);
+            std::cout << "INFO: Download File succeeded." << std::endl;
+            SetConsoleTextAttribute(console, COLOR_DEFAULT);
+            break;
+        }
+        fwrite(buffer, bytes, 1, file);
+    }
+    fclose(file);
+    socketData.close();
+}
+void FTPClient::upload(const string &source){
+    if (!is_connected() && !is_login())
+        throw SocketException("You should connect and login!");
+    
+    Response res;
+    std::ifstream in(source.c_str(), std::ios::in | std::ios::binary | std::ios::ate);
+
+    if(in){
+        long length = in.tellg();
+		in.seekg (0, in.beg);
+		
+        string port = parse_epsv_response();
+
+        socketData.connect(hostname, port);
+
+        string request = "STOR "+source+"\r\n";
+
+        socketControl.send(request);
+        res = get_receive_socket_control();
+        if(res.getCode() != "150"){
+            return;
+        }
+        SetConsoleTextAttribute(console, COLOR_PRIMARY);
+        std::cout<<"INFO: Sending File : "<<source<<"..."<<std::endl;
+        SetConsoleTextAttribute(console, COLOR_DEFAULT);
+
+        res = get_receive_socket_control();
+        if(res.getCode() == "226"){
+            SetConsoleTextAttribute(console, COLOR_PRIMARY);
+            cout << "INFO: Upload file succeeded." << endl;
+            SetConsoleTextAttribute(console, COLOR_DEFAULT);
+           
+        }
+        else{
+            SetConsoleTextAttribute(console, COLOR_ERROR);
+            cout << "INFO: Upload file failed." << endl;
+            SetConsoleTextAttribute(console, COLOR_DEFAULT);
+           
+        }
+        in.close();
+        socketData.close();
+    }
+    else{
+        SetConsoleTextAttribute(console, COLOR_ERROR);
+        cout << "ERROR: Doesn't exist. Please check the filename." << endl;
+        SetConsoleTextAttribute(console, COLOR_DEFAULT);
+    }
+        
 }
