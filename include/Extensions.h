@@ -17,7 +17,8 @@
             static void str_upper(std::string *str);
             static std::string str_trim(std::string &str);
             static std::vector<std::string> str_split(std::string str,char regex);
-            static Response convertBufferToResponse(const char* buffer);
+            static Response convert_buffer_to_response(const char* buffer);
+            static std::string get_file_name(const std::string &source);
     };
 
 #endif

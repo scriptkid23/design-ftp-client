@@ -25,7 +25,7 @@ vector<string> Extensions::str_split(std::string str, char regex){
         }
         return result;
 }
-Response Extensions::convertBufferToResponse(const char* buffer){
+Response Extensions::convert_buffer_to_response(const char* buffer){
   
     std::string str(buffer);
    
@@ -41,4 +41,13 @@ Response Extensions::convertBufferToResponse(const char* buffer){
 
     return response;
 
+}
+string Extensions::get_file_name(const string &source){
+    string filename = source;
+    const size_t last_slash_idx = filename.find_last_of("\\/");
+    if (std::string::npos != last_slash_idx)
+    {
+        filename.erase(0, last_slash_idx + 1);
+    }
+    return filename;
 }

@@ -98,7 +98,10 @@ void FTPClient::login(CmdLineInterface *callback)
         }
         else
         {
-            cout << "Message: " << res.getMessage() << endl;
+            SetConsoleTextAttribute(console, COLOR_ERROR);
+            cout << "ERROR: " << res.getMessage() << endl;
+            SetConsoleTextAttribute(console, COLOR_PRIMARY);
+
             prompt = this->hostname + "> ";
             isLogin = false;
             callback->setCmdPrompt(prompt);
@@ -106,7 +109,7 @@ void FTPClient::login(CmdLineInterface *callback)
     }
     else
     {
-        cerr << "Error: " << res.getMessage() << endl;
+        cerr << "ERROR: " << res.getMessage() << endl;
     }
 }
 string FTPClient::parse_epsv_response()
@@ -152,13 +155,14 @@ Response FTPClient::get_receive_socket_control()
     int bytes = socketControl.recv(buffer, 255);
     buffer[bytes] = 0;
 
-    return Extensions::convertBufferToResponse(buffer);
+    return Extensions::convert_buffer_to_response(buffer);
 };
 void FTPClient::get_list_file()
 {
     if (!is_connected() && !is_login())
         throw SocketException("You should connect and login!");
 
+        Response res;
 
         string port = parse_epsv_response();
 
@@ -263,7 +267,8 @@ void FTPClient::upload(const string &source){
         res = get_receive_socket_control();
         if(res.getCode() != "200") return;
 
-        string request = "STOR "+source+"\r\n";
+        string filename = Extensions::get_file_name(source);
+        string request = "STOR "+filename+"\r\n";
 
         socketControl.send(request);
         res = get_receive_socket_control();

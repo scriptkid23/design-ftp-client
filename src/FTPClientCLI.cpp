@@ -47,6 +47,7 @@ void FTPClientCLI::doConnect(char *cmd_argv[], int cmd_argc)
     ss >> port;
 
     FTPClientCLI::ftpClient.connect(hostname, port, this);
+    FTPClientCLI::ftpClient.login(this);
 }
 void FTPClientCLI::doHelp(char *cmd_argv[], int cmd_argc)
 {
