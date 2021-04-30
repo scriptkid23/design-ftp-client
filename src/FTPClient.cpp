@@ -211,14 +211,30 @@ void FTPClient::download(const string &filename){
     if (!is_connected() && !is_login())
         throw SocketException("You should connect and login!");
     
+    Response res;
+
     string port = parse_epsv_response();
 
     socketData.connect(hostname, port);
 
+    socketControl.send("TYPE I\r\n");
+    res = get_receive_socket_control();
+    if(res.getCode() != "200") return;
+
     string request = "RETR "+filename+"\r\n";
     socketControl.send(request);
 
-    get_receive_socket_control();
+    res = get_receive_socket_control();
+    if(res.getCode() == "550"){
+        
+        SetConsoleTextAttribute(console, COLOR_ERROR);
+        cout << "ERROR: " <<res.toString() << endl;
+        SetConsoleTextAttribute(console, COLOR_DEFAULT);
+        socketData.close();
+        
+        return;
+
+    }
     get_receive_socket_control();
 
     SetConsoleTextAttribute(console, COLOR_PRIMARY);

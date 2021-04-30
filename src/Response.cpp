@@ -14,5 +14,5 @@ std::string Response::getMessage(){
     return this->message;
 }
 std::string Response::toString(){
-    return "Response: (" + this->code + ")" + this->message + ".";
+    return "(" + this->code + ") " + this->message + ".";
 }

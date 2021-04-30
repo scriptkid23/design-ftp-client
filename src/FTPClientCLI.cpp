@@ -34,20 +34,36 @@ void FTPClientCLI::initCmd()
 
 void FTPClientCLI::doConnect(char *cmd_argv[], int cmd_argc)
 {
+    try{
+        if(cmd_argc != 3){
+            SetConsoleTextAttribute(console, COLOR_ERROR);
+            cerr << "ERROR: The syntax of the command is incorrect." << endl;
+            SetConsoleTextAttribute(console, COLOR_DEFAULT);
 
-    // define variable hostname and port
-    std::string hostname;
-    std::string port;
-    std::stringstream ss;
+            return;
+        }
+        // define variable hostname and port
+        std::string hostname;
+        std::string port;
+        std::stringstream ss;
 
-    ss << cmd_argv[1];
-    ss >> hostname;
-    ss.clear();
-    ss << cmd_argv[2];
-    ss >> port;
+        ss << cmd_argv[1];
+        ss >> hostname;
+        ss.clear();
+        ss << cmd_argv[2];
+        ss >> port;
 
-    FTPClientCLI::ftpClient.connect(hostname, port, this);
-    FTPClientCLI::ftpClient.login(this);
+        FTPClientCLI::ftpClient.connect(hostname, port, this);
+        if(FTPClientCLI::ftpClient.is_connected()){
+            FTPClientCLI::ftpClient.login(this);
+        }
+    }
+    catch(SocketException &e){
+        SetConsoleTextAttribute(console, COLOR_ERROR);
+        cerr << "ERROR: "<< e.what() << endl;
+        SetConsoleTextAttribute(console, COLOR_DEFAULT);
+    }
+    
 }
 void FTPClientCLI::doHelp(char *cmd_argv[], int cmd_argc)
 {
@@ -156,8 +172,14 @@ void FTPClientCLI::doDeleteFile(char *cmd_argv[], int cmd_argc){
     //TODO: code here;
 };
 void FTPClientCLI::doDownload(char *cmd_argv[], int cmd_argc){
-    //TODO: code here;
     try{
+            if(cmd_argc != 2){
+                SetConsoleTextAttribute(console, COLOR_ERROR);
+                cerr << "ERROR: The syntax of the command is incorrect." << endl;
+                SetConsoleTextAttribute(console, COLOR_DEFAULT);
+
+                return;
+            }
             std::string filename;
             std::stringstream ss;
 
@@ -172,8 +194,14 @@ void FTPClientCLI::doDownload(char *cmd_argv[], int cmd_argc){
     }
 };
 void FTPClientCLI::doUpload(char *cmd_argv[], int cmd_argc){
-    //TODO: code here;
     try{
+            if(cmd_argc != 2){
+                SetConsoleTextAttribute(console, COLOR_ERROR);
+                cerr << "ERROR: The syntax of the command is incorrect." << endl;
+                SetConsoleTextAttribute(console, COLOR_DEFAULT);
+
+                return;
+            }
             std::string filename;
             std::stringstream ss;
 
