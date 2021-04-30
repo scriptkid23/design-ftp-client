@@ -51,3 +51,9 @@ string Extensions::get_file_name(const string &source){
     }
     return filename;
 }
+void Extensions::font_color(const string &message, int color){
+        HANDLE console = GetStdHandle(STD_OUTPUT_HANDLE);
+        SetConsoleTextAttribute(console, color);
+        cout << message << endl;
+        SetConsoleTextAttribute(console, color);
+};

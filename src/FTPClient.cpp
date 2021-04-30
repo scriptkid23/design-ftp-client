@@ -19,9 +19,8 @@ void FTPClient::connect(const string &hostname, const string &port, CmdLineInter
         callback->setCmdPrompt(hostname + "> ");
 
         this->connected = true;
-        SetConsoleTextAttribute(console, COLOR_PRIMARY);
-        cout << "INFO: Connect to server succeeded." << endl;
-        SetConsoleTextAttribute(console, COLOR_DEFAULT);
+
+        Extensions::font_color("INFO: Connect to server succeeded.", COLOR_PRIMARY);
     }
     catch (SocketException &e)
     {
@@ -98,9 +97,7 @@ void FTPClient::login(CmdLineInterface *callback)
         }
         else
         {
-            SetConsoleTextAttribute(console, COLOR_ERROR);
-            cout << "ERROR: " << res.getMessage() << endl;
-            SetConsoleTextAttribute(console, COLOR_PRIMARY);
+            Extensions::font_color("ERROR: " + res.getMessage(), COLOR_ERROR);
 
             prompt = this->hostname + "> ";
             isLogin = false;
@@ -109,7 +106,7 @@ void FTPClient::login(CmdLineInterface *callback)
     }
     else
     {
-        cerr << "ERROR: " << res.getMessage() << endl;
+        Extensions::font_color("ERROR: " + res.getMessage(), COLOR_ERROR);
     }
 }
 string FTPClient::parse_epsv_response()
@@ -162,23 +159,23 @@ void FTPClient::get_list_file()
     if (!is_connected() && !is_login())
         throw SocketException("You should connect and login!");
 
-        Response res;
+    Response res;
 
-        string port = parse_epsv_response();
+    string port = parse_epsv_response();
 
-        socketData.connect(hostname, port);
+    socketData.connect(hostname, port);
 
-        socketControl.send("NLST\r\n");
+    socketControl.send("NLST\r\n");
 
-        // Beacause response of NLST return 2 response
-        get_receive_socket_control();
-        get_receive_socket_control();
+    // Beacause response of NLST return 2 response
+    get_receive_socket_control();
+    get_receive_socket_control();
 
-        // get result from socket data
-        cout << get_receive_socket_data();
+    // get result from socket data
+    cout << get_receive_socket_data();
 
-        // close socket data
-        socketData.close();
+    // close socket data
+    socketData.close();
 }
 void FTPClient::get_present_working_directory()
 {
@@ -188,10 +185,11 @@ void FTPClient::get_present_working_directory()
     socketControl.send("PWD\r\n");
     cout << get_receive_socket_control().getMessage();
 };
-void FTPClient::get_directory(){
+void FTPClient::get_directory()
+{
     if (!is_connected() && !is_login())
         throw SocketException("You should connect and login!");
-    
+
     string port = parse_epsv_response();
 
     socketData.connect(hostname, port);
@@ -204,13 +202,12 @@ void FTPClient::get_directory(){
     cout << get_receive_socket_data();
 
     socketData.close();
-
-
 }
-void FTPClient::download(const string &filename){
+void FTPClient::download(const string &filename)
+{
     if (!is_connected() && !is_login())
         throw SocketException("You should connect and login!");
-    
+
     Response res;
 
     string port = parse_epsv_response();
@@ -219,44 +216,41 @@ void FTPClient::download(const string &filename){
 
     socketControl.send("TYPE I\r\n");
     res = get_receive_socket_control();
-    if(res.getCode() != "200") return;
+    if (res.getCode() != "200")
+        return;
 
-    string request = "RETR "+filename+"\r\n";
+    string request = "RETR " + filename + "\r\n";
     socketControl.send(request);
 
     res = get_receive_socket_control();
-    if(res.getCode() == "550"){
-        
-        SetConsoleTextAttribute(console, COLOR_ERROR);
-        cout << "ERROR: " <<res.toString() << endl;
-        SetConsoleTextAttribute(console, COLOR_DEFAULT);
-        socketData.close();
-        
-        return;
+    if (res.getCode() == "550")
+    {
 
+        Extensions::font_color("ERROR: " + res.toString(), COLOR_ERROR);
+        socketData.close();
+
+        return;
     }
     get_receive_socket_control();
 
-    SetConsoleTextAttribute(console, COLOR_PRIMARY);
-    cout << "INFO: Download File: " <<filename<<"..."<< endl;
-    SetConsoleTextAttribute(console, COLOR_DEFAULT);
+    Extensions::font_color("INFO: Download File: " + filename + "...", COLOR_PRIMARY);
 
-    FILE *file;    
+    FILE *file;
 
+    char *source = const_cast<char *>((filename).c_str());
+    file = fopen(source, "wb");
 
-    char *source = const_cast<char*>((filename).c_str());
-    file = fopen(source,"wb");
-    
     int bytes;
     char buffer[4096];
-    while(true){
-        if((bytes =socketData.recv(buffer,4096)) == -1){
+    while (true)
+    {
+        if ((bytes = socketData.recv(buffer, 4096)) == -1)
+        {
             std::cout << "recv error: " << strerror(errno) << std::endl;
         }
-        if(bytes == 0){
-            SetConsoleTextAttribute(console, COLOR_PRIMARY);
-            std::cout << "INFO: Download File succeeded." << std::endl;
-            SetConsoleTextAttribute(console, COLOR_DEFAULT);
+        if (bytes == 0)
+        {
+            Extensions::font_color("INFO: Download File succeeded.", COLOR_PRIMARY);
             break;
         }
         fwrite(buffer, bytes, 1, file);
@@ -264,16 +258,18 @@ void FTPClient::download(const string &filename){
     fclose(file);
     socketData.close();
 }
-void FTPClient::upload(const string &source){
+void FTPClient::upload(const string &source)
+{
     if (!is_connected() && !is_login())
         throw SocketException("You should connect and login!");
-    
+
     Response res;
     std::ifstream file(source, std::ios::in | std::ios::binary | std::ios::ate);
 
-    if(file){
+    if (file)
+    {
         long length = file.tellg();
-		file.seekg (0, file.beg);
+        file.seekg(0, file.beg);
 
         string port = parse_epsv_response();
 
@@ -281,55 +277,48 @@ void FTPClient::upload(const string &source){
 
         socketControl.send("TYPE I\r\n");
         res = get_receive_socket_control();
-        if(res.getCode() != "200") return;
+        if (res.getCode() != "200")
+            return;
 
         string filename = Extensions::get_file_name(source);
-        string request = "STOR "+filename+"\r\n";
+        string request = "STOR " + filename + "\r\n";
 
         socketControl.send(request);
         res = get_receive_socket_control();
-        if(res.getCode() != "150"){
+        if (res.getCode() != "150")
+        {
             return;
         }
-        SetConsoleTextAttribute(console, COLOR_PRIMARY);
-        std::cout<<"INFO: Sending File : "<<source<<"..."<<std::endl;
-        SetConsoleTextAttribute(console, COLOR_DEFAULT);
-        
+        Extensions::font_color("INFO: Sending File : " + source + "...", COLOR_PRIMARY);
         string data;
-		double c_length = length;
+        double c_length = length;
 
-        while (length > 0){
-			int read_sz = 2048 <length ? 2048 : length;
-			char buffer[2048+1];
-			
-            file.read(buffer,read_sz);
-			data.assign(buffer,read_sz);
-            
-			socketData.send(data);
-			length -= read_sz;
-		}
+        while (length > 0)
+        {
+            int read_sz = 2048 < length ? 2048 : length;
+            char buffer[2048 + 1];
+
+            file.read(buffer, read_sz);
+            data.assign(buffer, read_sz);
+
+            socketData.send(data);
+            length -= read_sz;
+        }
         socketData.close();
 
         res = get_receive_socket_control();
-        if(res.getCode() == "226"){
-            SetConsoleTextAttribute(console, COLOR_PRIMARY);
-            cout << "INFO: Upload file succeeded." << endl;
-            SetConsoleTextAttribute(console, COLOR_DEFAULT);
-           
+        if (res.getCode() == "226")
+        {
+            Extensions::font_color("INFO: Upload file succeeded.", COLOR_PRIMARY);
         }
-        else{
-            SetConsoleTextAttribute(console, COLOR_ERROR);
-            cout << "INFO: Upload file failed." << endl;
-            SetConsoleTextAttribute(console, COLOR_DEFAULT);
-           
+        else
+        {
+            Extensions::font_color("ERROR: Upload file failed.", COLOR_ERROR);
         }
         file.close();
-        
     }
-    else{
-        SetConsoleTextAttribute(console, COLOR_ERROR);
-        cout << "ERROR: Doesn't exist. Please check the filename." << endl;
-        SetConsoleTextAttribute(console, COLOR_DEFAULT);
+    else
+    {
+        Extensions::font_color("ERROR: Doesn't exist. Please check the filename.", COLOR_ERROR);
     }
-        
 }

@@ -36,10 +36,7 @@ void FTPClientCLI::doConnect(char *cmd_argv[], int cmd_argc)
 {
     try{
         if(cmd_argc != 3){
-            SetConsoleTextAttribute(console, COLOR_ERROR);
-            cerr << "ERROR: The syntax of the command is incorrect." << endl;
-            SetConsoleTextAttribute(console, COLOR_DEFAULT);
-
+            Extensions::font_color("ERROR: The syntax of the command is incorrect.",COLOR_ERROR);
             return;
         }
         // define variable hostname and port
