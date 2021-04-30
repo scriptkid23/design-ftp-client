@@ -341,3 +341,18 @@ void FTPClient::upload(const string &source){
     }
         
 }
+void FTPClient::change_current_working_directory(const string &directory){
+    //TODO: code;
+}
+void FTPClient::delete_directory(const string &directory){
+    //TODO: code;
+}
+void FTPClient::create_directory(const string &directory){
+    //TODO: code;
+}
+void FTPClient::delete_file(const string &directory){
+    //TODO: code;
+}
+void FTPClient::rename_directory_or_file(const string &src, const string &dest){
+    //TODO: code;
+}
