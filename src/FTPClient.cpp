@@ -252,7 +252,7 @@ void FTPClient::download(const string &filename){
     get_receive_socket_control();
 
     SetConsoleTextAttribute(console, COLOR_PRIMARY);
-    cout << "INFO: Download File: " <<filename<<"..."<< endl;
+    cout << "INFO: Download File: " <<filename<<" ..."<< endl;
     SetConsoleTextAttribute(console, COLOR_DEFAULT);
 
     int bytes;
@@ -296,11 +296,17 @@ void FTPClient::upload(const string &source){
 
         socketControl.send(request);
         res = get_receive_socket_control();
+
         if(res.getCode() != "150"){
+            SetConsoleTextAttribute(console, COLOR_ERROR);
+            std::cout<<"ERROR:"<< res.toString() <<std::endl;
+            SetConsoleTextAttribute(console, COLOR_DEFAULT);
+            socketData.close();
             return;
         }
+
         SetConsoleTextAttribute(console, COLOR_PRIMARY);
-        std::cout<<"INFO: Sending File : "<<source<<"..."<<std::endl;
+        std::cout<<"INFO: Sending File : "<<source<<" ..."<<std::endl;
         SetConsoleTextAttribute(console, COLOR_DEFAULT);
         
         string data;
@@ -317,7 +323,6 @@ void FTPClient::upload(const string &source){
 			length -= read_sz;
 		}
         socketData.close();
-
         res = get_receive_socket_control();
         if(res.getCode() == "226"){
             SetConsoleTextAttribute(console, COLOR_PRIMARY);
