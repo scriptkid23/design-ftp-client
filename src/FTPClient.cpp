@@ -212,6 +212,20 @@ void FTPClient::download(const string &filename){
         throw SocketException("You should connect and login!");
     
     Response res;
+    
+    FILE *file;    
+
+    string src = "./download/"+filename;
+
+    char *source = const_cast<char*>((src).c_str());
+    file = fopen(source,"wb");
+    if(!file){
+        SetConsoleTextAttribute(console, COLOR_ERROR);
+        cout << "ERROR: You should create folder 'download'"<< endl;
+        SetConsoleTextAttribute(console, COLOR_DEFAULT);
+        return;
+    }
+
 
     string port = parse_epsv_response();
 
@@ -241,12 +255,6 @@ void FTPClient::download(const string &filename){
     cout << "INFO: Download File: " <<filename<<"..."<< endl;
     SetConsoleTextAttribute(console, COLOR_DEFAULT);
 
-    FILE *file;    
-
-
-    char *source = const_cast<char*>((filename).c_str());
-    file = fopen(source,"wb");
-    
     int bytes;
     char buffer[4096];
     while(true){
