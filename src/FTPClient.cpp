@@ -16,7 +16,9 @@ void FTPClient::connect(const string &hostname, const string &port, CmdLineInter
         socketControl.recv(buffer, 256);
 
         set_host_name(hostname);
-        callback->setCmdPrompt(hostname + "> ");
+        callback->set_hostname(hostname);
+
+        callback->setCmdPrompt(callback->getPrompt());
 
         this->connected = true;
         SetConsoleTextAttribute(console, COLOR_PRIMARY);
@@ -69,7 +71,7 @@ void FTPClient::login(CmdLineInterface *callback)
     if (!is_connected())
         throw SocketException("You should connect!");
 
-    std::string username, password, request, prompt;
+    std::string username, password, request;
     Response res;
 
     std::cout << "Username: ";
@@ -92,19 +94,21 @@ void FTPClient::login(CmdLineInterface *callback)
 
         if (res.getCode() == "230")
         {
-            prompt = this->hostname + " " + username + "> ";
+            callback->set_user(username);
+            callback->set_current_working_directory(get_present_working_directory());
             isLogin = true;
-            callback->setCmdPrompt(prompt);
+            callback->setCmdPrompt(callback->getPrompt());
         }
         else
         {
+            callback->set_user("");
+            callback->set_current_working_directory("");
+            callback->setCmdPrompt(callback->getPrompt());
+            
             SetConsoleTextAttribute(console, COLOR_ERROR);
             cout << "ERROR: " << res.getMessage() << endl;
             SetConsoleTextAttribute(console, COLOR_PRIMARY);
-
-            prompt = this->hostname + "> ";
             isLogin = false;
-            callback->setCmdPrompt(prompt);
         }
     }
     else
@@ -180,13 +184,13 @@ void FTPClient::get_list_file()
         // close socket data
         socketData.close();
 }
-void FTPClient::get_present_working_directory()
+string FTPClient::get_present_working_directory()
 {
     if (!is_connected() && !is_login())
         throw SocketException("You should connect and login!");
 
     socketControl.send("PWD\r\n");
-    cout << get_receive_socket_control().getMessage();
+    return Extensions::get_path(get_receive_socket_control().getMessage());
 };
 void FTPClient::get_directory(){
     if (!is_connected() && !is_login())
@@ -346,8 +350,20 @@ void FTPClient::upload(const string &source){
     }
         
 }
-void FTPClient::change_current_working_directory(const string &directory){
+void FTPClient::change_current_working_directory(const string &directory,CmdLineInterface *callback){
     //TODO: code;
+    socketControl.send("CWD "+directory+"\r\n");
+    Response res = get_receive_socket_control();
+
+    if(res.getCode() == "550"){
+        SetConsoleTextAttribute(console, COLOR_ERROR);
+        cout << "ERROR: "<<directory <<" not found!" << endl;
+        SetConsoleTextAttribute(console, COLOR_DEFAULT);
+        return;
+    }
+    callback->set_current_working_directory(get_present_working_directory());
+    callback->setCmdPrompt(callback->getPrompt());
+
 }
 void FTPClient::delete_directory(const string &directory){
     //TODO: code;

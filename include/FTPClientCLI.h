@@ -16,7 +16,11 @@ class FTPClientCLI: public CmdLineInterface{
             FTPClient ftpClient;
             FTPClientCLI();
             virtual void initCmd();
-            
+        protected:
+            string hostname;
+            string user;
+            string cWorkingDirectory;
+
         private:
             
             void doClose(char* cmd_argv[], int cmd_argc);

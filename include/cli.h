@@ -35,6 +35,9 @@ class CmdLineInterface {
         uint8_t numCommands;
         string  cmdNameList[CMD_MAX_NUM];
         char *syntax;
+        string hostname;
+        string user;
+        string cWorkingDirectory;
     protected:
         HANDLE console = GetStdHandle(STD_OUTPUT_HANDLE);
     public:
@@ -46,6 +49,10 @@ class CmdLineInterface {
         void addCmd(const string name, CLI_CMD_FUNC f);
         void run();
         virtual void initCmd();
+        string getPrompt();
+        void set_hostname(const string &hostname);
+        void set_user(const string &user);
+        void set_current_working_directory(const string &directory);
     private:
         void readCmd(char *cmd_buf, int buflen);
         uint8_t parseCmd(char *cmd_buf, char *cmd_argv[], int& cmd_argc);

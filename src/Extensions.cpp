@@ -51,3 +51,15 @@ string Extensions::get_file_name(const string &source){
     }
     return filename;
 }
+std::string Extensions::get_path(const std::string &source){
+    
+    std::stringstream ss;
+    std::string path;
+    ss << source;
+    ss >> path;
+
+    std::regex expr("[^\\:*?\"<>|]+");
+    std::smatch m;
+    std::regex_search(path,m,expr);
+    return m[0];
+}

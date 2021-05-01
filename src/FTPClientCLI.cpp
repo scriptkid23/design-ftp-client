@@ -34,8 +34,10 @@ void FTPClientCLI::initCmd()
 
 void FTPClientCLI::doConnect(char *cmd_argv[], int cmd_argc)
 {
-    try{
-        if(cmd_argc != 3){
+    try
+    {
+        if (cmd_argc != 3)
+        {
             SetConsoleTextAttribute(console, COLOR_ERROR);
             cerr << "ERROR: The syntax of the command is incorrect." << endl;
             SetConsoleTextAttribute(console, COLOR_DEFAULT);
@@ -54,16 +56,17 @@ void FTPClientCLI::doConnect(char *cmd_argv[], int cmd_argc)
         ss >> port;
 
         FTPClientCLI::ftpClient.connect(hostname, port, this);
-        if(FTPClientCLI::ftpClient.is_connected()){
+        if (FTPClientCLI::ftpClient.is_connected())
+        {
             FTPClientCLI::ftpClient.login(this);
         }
     }
-    catch(SocketException &e){
+    catch (SocketException &e)
+    {
         SetConsoleTextAttribute(console, COLOR_ERROR);
-        cerr << "ERROR: "<< e.what() << endl;
+        cerr << "ERROR: " << e.what() << endl;
         SetConsoleTextAttribute(console, COLOR_DEFAULT);
     }
-    
 }
 void FTPClientCLI::doHelp(char *cmd_argv[], int cmd_argc)
 {
@@ -82,7 +85,8 @@ void FTPClientCLI::doHelp(char *cmd_argv[], int cmd_argc)
     }
     else
     {
-        std::cout << "Commands may be abbreviated.  Commands are:" << endl << endl;
+        std::cout << "Commands may be abbreviated.  Commands are:" << endl
+                  << endl;
         std::cout << std::setw(30) << std::left << "login";
         std::cout << std::setw(20) << std::left << "login to ftp server" << std::endl;
         std::cout << std::setw(30) << std::left << "ls";
@@ -134,7 +138,7 @@ void FTPClientCLI::doLogin(char *cmd_argv[], int cmd_argc)
     catch (SocketException &e)
     {
         SetConsoleTextAttribute(console, COLOR_ERROR);
-        cerr << "ERROR: "<< e.what() << endl;
+        cerr << "ERROR: " << e.what() << endl;
         SetConsoleTextAttribute(console, COLOR_DEFAULT);
     }
 }
@@ -148,16 +152,23 @@ void FTPClientCLI::doList(char *cmd_argv[], int cmd_argc)
     catch (SocketException &e)
     {
         SetConsoleTextAttribute(console, COLOR_ERROR);
-        cerr << "ERROR: "<<e.what() << endl;
+        cerr << "ERROR: " << e.what() << endl;
         SetConsoleTextAttribute(console, COLOR_DEFAULT);
-        if(e.what() == "Send failed (send()): Unknown error"){
+        if (e.what() == "Send failed (send()): Unknown error")
+        {
             FTPClientCLI::ftpClient.close(this);
         }
-
     }
 }
-void FTPClientCLI::doCWD(char *cmd_argv[], int cmd_argc){
+void FTPClientCLI::doCWD(char *cmd_argv[], int cmd_argc)
+{
     //TODO: code here;
+    std::stringstream ss;
+    std::string directory;
+    ss << cmd_argv[1];
+    ss >> directory;
+
+    FTPClientCLI::ftpClient.change_current_working_directory(directory, this);
 };
 void FTPClientCLI::doDeleteDirectory(char *cmd_argv[], int cmd_argc){
     //TODO: code here;
@@ -171,45 +182,53 @@ void FTPClientCLI::doRenameDirectoryOrFile(char *cmd_argv[], int cmd_argc){
 void FTPClientCLI::doDeleteFile(char *cmd_argv[], int cmd_argc){
     //TODO: code here;
 };
-void FTPClientCLI::doDownload(char *cmd_argv[], int cmd_argc){
-    try{
-            if(cmd_argc != 2){
-                SetConsoleTextAttribute(console, COLOR_ERROR);
-                cerr << "ERROR: The syntax of the command is incorrect." << endl;
-                SetConsoleTextAttribute(console, COLOR_DEFAULT);
+void FTPClientCLI::doDownload(char *cmd_argv[], int cmd_argc)
+{
+    try
+    {
+        if (cmd_argc != 2)
+        {
+            SetConsoleTextAttribute(console, COLOR_ERROR);
+            cerr << "ERROR: The syntax of the command is incorrect." << endl;
+            SetConsoleTextAttribute(console, COLOR_DEFAULT);
 
-                return;
-            }
-            std::string filename;
-            std::stringstream ss;
+            return;
+        }
+        std::string filename;
+        std::stringstream ss;
 
-            ss << cmd_argv[1];
-            ss >> filename;
-            FTPClientCLI::ftpClient.download(filename);
+        ss << cmd_argv[1];
+        ss >> filename;
+        FTPClientCLI::ftpClient.download(filename);
     }
-    catch(SocketException &e){
+    catch (SocketException &e)
+    {
         SetConsoleTextAttribute(console, COLOR_ERROR);
         cerr << "ERROR: " << e.what() << endl;
         SetConsoleTextAttribute(console, COLOR_DEFAULT);
     }
 };
-void FTPClientCLI::doUpload(char *cmd_argv[], int cmd_argc){
-    try{
-            if(cmd_argc != 2){
-                SetConsoleTextAttribute(console, COLOR_ERROR);
-                cerr << "ERROR: The syntax of the command is incorrect." << endl;
-                SetConsoleTextAttribute(console, COLOR_DEFAULT);
+void FTPClientCLI::doUpload(char *cmd_argv[], int cmd_argc)
+{
+    try
+    {
+        if (cmd_argc != 2)
+        {
+            SetConsoleTextAttribute(console, COLOR_ERROR);
+            cerr << "ERROR: The syntax of the command is incorrect." << endl;
+            SetConsoleTextAttribute(console, COLOR_DEFAULT);
 
-                return;
-            }
-            std::string filename;
-            std::stringstream ss;
+            return;
+        }
+        std::string filename;
+        std::stringstream ss;
 
-            ss << cmd_argv[1];
-            ss >> filename;
-            FTPClientCLI::ftpClient.upload(filename);
+        ss << cmd_argv[1];
+        ss >> filename;
+        FTPClientCLI::ftpClient.upload(filename);
     }
-    catch(SocketException &e){
+    catch (SocketException &e)
+    {
         SetConsoleTextAttribute(console, COLOR_ERROR);
         cerr << "ERROR: " << e.what() << endl;
         SetConsoleTextAttribute(console, COLOR_DEFAULT);
@@ -219,23 +238,28 @@ void FTPClientCLI::doPWD(char *cmd_argv[], int cmd_argc)
 {
     try
     {
-        FTPClientCLI::ftpClient.get_present_working_directory();
+        string response = FTPClientCLI::ftpClient.get_present_working_directory();
+        cout << "'" << response << "'"
+             << " is current directory" << endl;
     }
     catch (SocketException &e)
     {
         SetConsoleTextAttribute(console, COLOR_ERROR);
         cerr << "ERROR: " << e.what() << endl;
         SetConsoleTextAttribute(console, COLOR_DEFAULT);
-       
     }
 }
-void FTPClientCLI::doDIR(char *cmd_argv[], int cmd_argc){
-    try{
+void FTPClientCLI::doDIR(char *cmd_argv[], int cmd_argc)
+{
+    try
+    {
         FTPClientCLI::ftpClient.get_directory();
     }
-    catch(SocketException &e){
+    catch (SocketException &e)
+    {
         SetConsoleTextAttribute(console, COLOR_ERROR);
         cerr << "ERROR: " << e.what() << endl;
         SetConsoleTextAttribute(console, COLOR_DEFAULT);
     }
 }
+
