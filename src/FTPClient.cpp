@@ -190,7 +190,12 @@ string FTPClient::get_present_working_directory()
         throw SocketException("You should connect and login!");
 
     socketControl.send("PWD\r\n");
-    return Extensions::get_path(get_receive_socket_control().getMessage());
+    string response = get_receive_socket_control().getMessage();
+    string result = "";
+    for(int i = response.find_first_of('"') + 1; i < response.find_last_of('"'); i++){
+        result+=response[i];
+    }
+    return result;
 };
 void FTPClient::get_directory(){
     if (!is_connected() && !is_login())
@@ -352,7 +357,7 @@ void FTPClient::upload(const string &source){
 }
 void FTPClient::change_current_working_directory(const string &directory,CmdLineInterface *callback){
     //TODO: code;
-    socketControl.send("CWD "+directory+"\r\n");
+    socketControl.send("CWD"+directory+"\r\n");
     Response res = get_receive_socket_control();
 
     if(res.getCode() == "550"){

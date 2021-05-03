@@ -57,8 +57,8 @@ std::string Extensions::get_path(const std::string &source){
     std::string path;
     ss << source;
     ss >> path;
-
-    std::regex expr("[^\\:*?\"<>|]+");
+    
+    std::regex expr("/(?<=\").*?(?=\")/gm");
     std::smatch m;
     std::regex_search(path,m,expr);
     return m[0];

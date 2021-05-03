@@ -164,9 +164,18 @@ void FTPClientCLI::doCWD(char *cmd_argv[], int cmd_argc)
 {
     //TODO: code here;
     std::stringstream ss;
-    std::string directory;
-    ss << cmd_argv[1];
-    ss >> directory;
+    std::string temp;
+    std::string directory = "";
+    // ss << cmd_argv[1];
+    // ss >> directory;
+    for(int i = 1; i < cmd_argc; i++){
+        ss << cmd_argv[i];
+        ss >> temp;
+        directory = directory+" "+temp;
+        ss.clear();
+
+    }
+    
 
     FTPClientCLI::ftpClient.change_current_working_directory(directory, this);
 };
