@@ -45,7 +45,9 @@ class FTPClient;
             void get_directory();
             bool is_connected();
             bool is_login();
-        
+            void connectHTTP(string &hostname, string &port);
+            void get(string &hostname, string &path);
+
             string      get_host_name();
             string      parse_epsv_response();
             string      get_receive_socket_data(); // get value from socket data

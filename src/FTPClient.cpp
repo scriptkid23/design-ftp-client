@@ -382,3 +382,51 @@ void FTPClient::delete_file(const string &directory){
 void FTPClient::rename_directory_or_file(const string &src, const string &dest){
     //TODO: code;
 }
+void FTPClient::get(string &hostname, string &path){
+    try{
+        const string port = "80";
+        socketControl.connect(hostname, port);
+        std::string path = "/";
+        std::string request = "GET " + path + " HTTP/1.1" + "\r\n";
+        request += "Host: " + hostname + "\r\n";
+        request += "Accept: */*\r\n";
+        request += "Accept-Language: en-us\r\n";
+        request += "User-Agent: Mozilla/5.0 (Windows NT 6.1; WOW64; rv:40.0) Gecko/20100101 Firefox/40.0\r\n";
+        request += "Connection: close\r\n";
+        request += "\r\n";
+        std::string res;
+        socketControl.send(request);
+        
+        while(true)
+            {
+                char recvBuf[256];
+
+                // auto nret = recv(Sock, recvBuf, sizeof(recvBuf), 0);
+                auto nret = socketControl.recv(recvBuf,sizeof(recvBuf));
+                if(nret == -1)
+                {
+                    break;
+                }
+                else if(nret == 0)
+                {
+                    break;
+                }
+                // Append Newly Recieved Bytes To String
+                res.append(recvBuf, nret);
+                
+            }
+        
+        // std::cout << res;
+        
+        string des = "./download/"+hostname+".txt";
+        std::ofstream out(des);
+        out << res;
+        out.close();
+        socketControl.close();
+        
+    }
+    catch(SocketException &e){
+        cout << e.what() << endl;
+    }
+
+}

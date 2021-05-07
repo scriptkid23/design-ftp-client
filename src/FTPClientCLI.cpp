@@ -14,7 +14,7 @@ void FTPClientCLI::initCmd()
     addCmd("connect", CLI_CAST(&FTPClientCLI::doConnect));
     addCmd("help", CLI_CAST(&FTPClientCLI::doHelp));
     addCmd("clear", CLI_CAST(&FTPClientCLI::doClear));
-
+    addCmd("get",CLI_CAST(&FTPClientCLI::doGet));
     // using if is connected = true
 
     addCmd("login", CLI_CAST(&FTPClientCLI::doLogin));
@@ -76,10 +76,17 @@ void FTPClientCLI::doHelp(char *cmd_argv[], int cmd_argc)
                   << endl;
         std::cout << std::setw(30) << std::left << "connect <hostname> <port>";
         std::cout << std::setw(20) << std::left << "Connect to FTP server" << std::endl;
+
+        std::cout << std::setw(30) << std::left << "get <hostname> <path>";
+        std::cout << std::setw(20) << std::left << "HTTP GET " << std::endl;
+
+
         std::cout << std::setw(30) << std::left << "help";
         std::cout << std::setw(20) << std::left << "Print local help information" << std::endl;
+        
         std::cout << std::setw(30) << std::left << "clear";
         std::cout << std::setw(20) << std::left << "Clears the screen" << std::endl;
+        
         std::cout << std::setw(30) << std::left << "quit";
         std::cout << std::setw(20) << std::left << "Exit the program." << std::endl;
     }
@@ -272,3 +279,15 @@ void FTPClientCLI::doDIR(char *cmd_argv[], int cmd_argc)
     }
 }
 
+void FTPClientCLI::doGet(char *cmd_argv[], int cmd_argc){
+    std::string hostname;
+    std::string path;
+    std::stringstream ss;
+
+    ss << cmd_argv[1];
+    ss >> hostname;
+    ss.clear();
+    ss << cmd_argv[2];
+    ss >> path;
+    FTPClientCLI::ftpClient.get(hostname, path);
+}

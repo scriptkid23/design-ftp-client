@@ -20,6 +20,8 @@ void Display::home_screen(){
     std::cout << "Commands may be abbreviated.  Commands are:" << std::endl << std::endl;
     std::cout <<  std::setw(30) << std::left << "connect <hostname> <port>";
     std::cout <<  std::setw(20) << std::left << "Connect to FTP server" << std::endl;
+    std::cout << std::setw(30) << std::left << "get <hostname> <path>";
+    std::cout << std::setw(20) << std::left << "HTTP GET " << std::endl;
     std::cout <<  std::setw(30) << std::left << "help";
     std::cout <<  std::setw(20) << std::left << "Print local help information" << std::endl;
     std::cout <<  std::setw(30) << std::left << "clear";
