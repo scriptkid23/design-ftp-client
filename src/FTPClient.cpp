@@ -397,11 +397,20 @@ void FTPClient::get(string &hostname, string &path){
         std::string res;
         socketControl.send(request);
         
+        char buffer[255];
+        string response;
+        int bytes = socketControl.recvLine(buffer,255);
+        while(bytes > 0){
+            if(strcmp(buffer,"\r\n\n") == 0){break;}
+            buffer[bytes] = 0;
+            response+=buffer;
+            bytes = socketControl.recvLine(buffer,255);
+        }
+        std::cout << response;
+        
         while(true)
             {
                 char recvBuf[256];
-
-                // auto nret = recv(Sock, recvBuf, sizeof(recvBuf), 0);
                 auto nret = socketControl.recv(recvBuf,sizeof(recvBuf));
                 if(nret == -1)
                 {
@@ -411,13 +420,8 @@ void FTPClient::get(string &hostname, string &path){
                 {
                     break;
                 }
-                // Append Newly Recieved Bytes To String
                 res.append(recvBuf, nret);
-                
             }
-        
-        // std::cout << res;
-        
         string des = "./download/"+hostname+".txt";
         std::ofstream out(des);
         out << res;
