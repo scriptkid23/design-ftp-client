@@ -154,30 +154,37 @@ void FTPClientCLI::doList(char *cmd_argv[], int cmd_argc)
         SetConsoleTextAttribute(console, COLOR_ERROR);
         cerr << "ERROR: " << e.what() << endl;
         SetConsoleTextAttribute(console, COLOR_DEFAULT);
-        if (e.what() == "Send failed (send()): Unknown error")
-        {
-            FTPClientCLI::ftpClient.close(this);
-        }
+
+        FTPClientCLI::ftpClient.close(this);
+        
     }
 }
 void FTPClientCLI::doCWD(char *cmd_argv[], int cmd_argc)
 {
-    //TODO: code here;
-    std::stringstream ss;
-    std::string temp;
-    std::string directory = "";
-    // ss << cmd_argv[1];
-    // ss >> directory;
-    for(int i = 1; i < cmd_argc; i++){
-        ss << cmd_argv[i];
-        ss >> temp;
-        directory = directory+" "+temp;
-        ss.clear();
+    try{
+        //TODO: code here;
+        std::stringstream ss;
+        std::string temp;
+        std::string directory = "";
+        // ss << cmd_argv[1];
+        // ss >> directory;
+        for(int i = 1; i < cmd_argc; i++){
+            ss << cmd_argv[i];
+            ss >> temp;
+            directory = directory+" "+temp;
+            ss.clear();
 
+        }
+        
+
+        FTPClientCLI::ftpClient.change_current_working_directory(directory, this);
     }
-    
-
-    FTPClientCLI::ftpClient.change_current_working_directory(directory, this);
+    catch(SocketException &e){
+        SetConsoleTextAttribute(console, COLOR_ERROR);
+        cerr << "ERROR: " << e.what() << endl;
+        SetConsoleTextAttribute(console, COLOR_DEFAULT);
+        FTPClientCLI::ftpClient.close(this);
+    }
 };
 void FTPClientCLI::doDeleteDirectory(char *cmd_argv[], int cmd_argc){
     //TODO: code here;
@@ -215,6 +222,8 @@ void FTPClientCLI::doDownload(char *cmd_argv[], int cmd_argc)
         SetConsoleTextAttribute(console, COLOR_ERROR);
         cerr << "ERROR: " << e.what() << endl;
         SetConsoleTextAttribute(console, COLOR_DEFAULT);
+
+        FTPClientCLI::ftpClient.close(this);
     }
 };
 void FTPClientCLI::doUpload(char *cmd_argv[], int cmd_argc)
@@ -241,6 +250,7 @@ void FTPClientCLI::doUpload(char *cmd_argv[], int cmd_argc)
         SetConsoleTextAttribute(console, COLOR_ERROR);
         cerr << "ERROR: " << e.what() << endl;
         SetConsoleTextAttribute(console, COLOR_DEFAULT);
+        FTPClientCLI::ftpClient.close(this);
     }
 };
 void FTPClientCLI::doPWD(char *cmd_argv[], int cmd_argc)
@@ -256,6 +266,7 @@ void FTPClientCLI::doPWD(char *cmd_argv[], int cmd_argc)
         SetConsoleTextAttribute(console, COLOR_ERROR);
         cerr << "ERROR: " << e.what() << endl;
         SetConsoleTextAttribute(console, COLOR_DEFAULT);
+        FTPClientCLI::ftpClient.close(this);
     }
 }
 void FTPClientCLI::doDIR(char *cmd_argv[], int cmd_argc)
@@ -269,6 +280,7 @@ void FTPClientCLI::doDIR(char *cmd_argv[], int cmd_argc)
         SetConsoleTextAttribute(console, COLOR_ERROR);
         cerr << "ERROR: " << e.what() << endl;
         SetConsoleTextAttribute(console, COLOR_DEFAULT);
+        FTPClientCLI::ftpClient.close(this);
     }
 }
 
