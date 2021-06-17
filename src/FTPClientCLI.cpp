@@ -157,7 +157,7 @@ void FTPClientCLI::doList(char *cmd_argv[], int cmd_argc)
 
     try
     {
-        FTPClientCLI::ftpClient.get_list_file();
+        std::cout << FTPClientCLI::ftpClient.get_list_file();
     }
     catch (SocketException &e)
     {
@@ -172,12 +172,10 @@ void FTPClientCLI::doCWD(char *cmd_argv[], int cmd_argc)
 {
     try
     {
-        //TODO: code here;
         std::stringstream ss;
         std::string temp;
         std::string directory = "";
-        // ss << cmd_argv[1];
-        // ss >> directory;
+
         for (int i = 1; i < cmd_argc; i++)
         {
             ss << cmd_argv[i];
@@ -283,7 +281,7 @@ void FTPClientCLI::doDIR(char *cmd_argv[], int cmd_argc)
 {
     try
     {
-        FTPClientCLI::ftpClient.get_directory();
+        std::cout << FTPClientCLI::ftpClient.get_directory();
     }
     catch (SocketException &e)
     {

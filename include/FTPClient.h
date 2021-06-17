@@ -32,7 +32,7 @@ class FTPClient;
             void set_host_name(string hostname);
             void echo(const string &msg);
             void login(const string &username, const string &password, CmdLineInterface *callback);
-            void get_list_file();
+            string get_list_file();
             void close(CmdLineInterface *callback);
             void change_current_working_directory(const string &directory, CmdLineInterface *callback);
             void delete_directory(const string &directory);
@@ -42,7 +42,7 @@ class FTPClient;
             void download(const string &filename);
             void upload(const string &filename);
             string get_present_working_directory();
-            void get_directory();
+            string get_directory();
             bool is_connected();
             bool is_login();
         

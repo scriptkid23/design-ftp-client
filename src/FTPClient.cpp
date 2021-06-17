@@ -156,7 +156,7 @@ Response FTPClient::get_receive_socket_control()
 
     return Extensions::convert_buffer_to_response(buffer);
 };
-void FTPClient::get_list_file()
+string FTPClient::get_list_file()
 {
     if (!is_connected() && !is_login())
         throw SocketException("You should connect and login!");
@@ -174,7 +174,7 @@ void FTPClient::get_list_file()
     get_receive_socket_control();
 
     // get result from socket data
-    cout << get_receive_socket_data();
+    return get_receive_socket_data();
 
     // close socket data
     socketData.close();
@@ -193,7 +193,7 @@ string FTPClient::get_present_working_directory()
     }
     return result;
 };
-void FTPClient::get_directory()
+string FTPClient::get_directory()
 {
     if (!is_connected() && !is_login())
         throw SocketException("You should connect and login!");
@@ -207,7 +207,7 @@ void FTPClient::get_directory()
     get_receive_socket_control();
     get_receive_socket_control();
 
-    cout << get_receive_socket_data();
+    return get_receive_socket_data();
 
     socketData.close();
 }
