@@ -8,29 +8,19 @@ FTPClient::FTPClient()
 
 void FTPClient::connect(const string &hostname, const string &port, CmdLineInterface *callback)
 {
-    try
-    {
+  
         char buffer[256];
-        socketControl.connect(hostname, port);
 
+        socketControl.connect(hostname, port);
         socketControl.recv(buffer, 256);
 
         set_host_name(hostname);
-        callback->set_hostname(hostname);
 
+        callback->set_hostname(hostname);
         callback->setCmdPrompt(callback->getPrompt());
 
         this->connected = true;
-        SetConsoleTextAttribute(console, COLOR_PRIMARY);
-        cout << "INFO: Connect to server succeeded." << endl;
-        SetConsoleTextAttribute(console, COLOR_DEFAULT);
-    }
-    catch (SocketException &e)
-    {
-        SetConsoleTextAttribute(console, COLOR_ERROR);
-        cerr << "ERROR: " << e.what() << endl;
-        SetConsoleTextAttribute(console, COLOR_DEFAULT);
-    }
+
 }
 void FTPClient::close(CmdLineInterface *callback)
 {
@@ -100,15 +90,16 @@ void FTPClient::login(const string &username, const string &password, CmdLineInt
             callback->set_current_working_directory("");
             callback->setCmdPrompt(callback->getPrompt());
 
-            SetConsoleTextAttribute(console, COLOR_ERROR);
-            cout << "ERROR: " << res.getMessage() << endl;
-            SetConsoleTextAttribute(console, COLOR_PRIMARY);
+            // SetConsoleTextAttribute(console, COLOR_ERROR);
+            // cout << "ERROR: " << res.getMessage() << endl;
+            // SetConsoleTextAttribute(console, COLOR_PRIMARY);
             isLogin = false;
+            throw CustomizeException(res.toString());
         }
     }
     else
     {
-        cerr << "ERROR: " << res.getMessage() << endl;
+        throw CustomizeException(res.toString());
     }
 }
 string FTPClient::parse_epsv_response()
@@ -227,10 +218,7 @@ void FTPClient::download(const string &filename)
     file = fopen(source, "wb");
     if (!file)
     {
-        SetConsoleTextAttribute(console, COLOR_ERROR);
-        cout << "ERROR: You should create folder 'download'" << endl;
-        SetConsoleTextAttribute(console, COLOR_DEFAULT);
-        return;
+        throw CustomizeException("You should create folder 'download'");
     }
 
     string port = parse_epsv_response();
@@ -240,7 +228,7 @@ void FTPClient::download(const string &filename)
     socketControl.send("TYPE I\r\n");
     res = get_receive_socket_control();
     if (res.getCode() != "200")
-        return;
+        throw CustomizeException(res.toString());
 
     string request = "RETR " + filename + "\r\n";
     socketControl.send(request);
@@ -249,12 +237,12 @@ void FTPClient::download(const string &filename)
     if (res.getCode() == "550")
     {
 
-        SetConsoleTextAttribute(console, COLOR_ERROR);
-        cout << "ERROR: " << res.toString() << endl;
-        SetConsoleTextAttribute(console, COLOR_DEFAULT);
+        // SetConsoleTextAttribute(console, COLOR_ERROR);
+        // cout << "ERROR: " << res.toString() << endl;
+        // SetConsoleTextAttribute(console, COLOR_DEFAULT);
         socketData.close();
-
-        return;
+        throw CustomizeException(res.toString());
+        // return;
     }
     get_receive_socket_control();
 
@@ -302,7 +290,7 @@ void FTPClient::upload(const string &source)
         socketControl.send("TYPE I\r\n");
         res = get_receive_socket_control();
         if (res.getCode() != "200")
-            return;
+            throw CustomizeException(res.toString());
 
         string filename = Extensions::get_file_name(source);
         string request = "STOR " + filename + "\r\n";
@@ -311,12 +299,9 @@ void FTPClient::upload(const string &source)
         res = get_receive_socket_control();
 
         if (res.getCode() != "150")
-        {
-            SetConsoleTextAttribute(console, COLOR_ERROR);
-            std::cout << "ERROR:" << res.toString() << std::endl;
-            SetConsoleTextAttribute(console, COLOR_DEFAULT);
+        {    
             socketData.close();
-            return;
+            throw CustomizeException(res.toString());
         }
 
         SetConsoleTextAttribute(console, COLOR_PRIMARY);
@@ -355,9 +340,7 @@ void FTPClient::upload(const string &source)
     }
     else
     {
-        SetConsoleTextAttribute(console, COLOR_ERROR);
-        cout << "ERROR: Doesn't exist. Please check the filename." << endl;
-        SetConsoleTextAttribute(console, COLOR_DEFAULT);
+        throw CustomizeException("Doesn't exist. Please check the filename.");
     }
 }
 void FTPClient::change_current_working_directory(const string &directory, CmdLineInterface *callback)

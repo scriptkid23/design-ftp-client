@@ -65,6 +65,14 @@ void FTPClientCLI::doConnect(char *cmd_argv[], int cmd_argc)
             std::cin >> password;
             FTPClientCLI::ftpClient.login(username, password, this);
         }
+        SetConsoleTextAttribute(console, COLOR_PRIMARY);
+        cout << "INFO: Connect to server succeeded." << endl;
+        SetConsoleTextAttribute(console, COLOR_DEFAULT);
+    }
+    catch(CustomizeException &e){
+        SetConsoleTextAttribute(console, COLOR_ERROR);
+        cerr << "ERROR: " << e.what() << endl;
+        SetConsoleTextAttribute(console, COLOR_DEFAULT);
     }
     catch (SocketException &e)
     {
@@ -145,6 +153,11 @@ void FTPClientCLI::doLogin(char *cmd_argv[], int cmd_argc)
         std::cin >> password;
         FTPClientCLI::ftpClient.login(username, password, this);
     }
+    catch (CustomizeException &e){
+        SetConsoleTextAttribute(console, COLOR_ERROR);
+        cerr << "ERROR: " << e.what() << endl;
+        SetConsoleTextAttribute(console, COLOR_DEFAULT);
+    }
     catch (SocketException &e)
     {
         SetConsoleTextAttribute(console, COLOR_ERROR);
@@ -158,6 +171,11 @@ void FTPClientCLI::doList(char *cmd_argv[], int cmd_argc)
     try
     {
         std::cout << FTPClientCLI::ftpClient.get_list_file();
+    }
+    catch (CustomizeException &e){
+        SetConsoleTextAttribute(console, COLOR_ERROR);
+        cerr << "ERROR: " << e.what() << endl;
+        SetConsoleTextAttribute(console, COLOR_DEFAULT);
     }
     catch (SocketException &e)
     {
@@ -185,6 +203,11 @@ void FTPClientCLI::doCWD(char *cmd_argv[], int cmd_argc)
         }
 
         FTPClientCLI::ftpClient.change_current_working_directory(directory, this);
+    }
+    catch (CustomizeException &e){
+        SetConsoleTextAttribute(console, COLOR_ERROR);
+        cerr << "ERROR: " << e.what() << endl;
+        SetConsoleTextAttribute(console, COLOR_DEFAULT);
     }
     catch (SocketException &e)
     {
@@ -269,9 +292,8 @@ void FTPClientCLI::doRenameDirectoryOrFile(char *cmd_argv[], int cmd_argc)
         cout << "Destination folder name or file name: ";
         getline(cin, dest);
 
-        FTPClientCLI::ftpClient.rename_directory_or_file(src,dest);
+        FTPClientCLI::ftpClient.rename_directory_or_file(src, dest);
         std::cout << "Rename folder or file succeeded" << endl;
-
     }
     catch (CustomizeException &e)
     {
@@ -288,7 +310,8 @@ void FTPClientCLI::doRenameDirectoryOrFile(char *cmd_argv[], int cmd_argc)
     }
     //TODO: code here;
 };
-void FTPClientCLI::doDeleteFile(char *cmd_argv[], int cmd_argc){
+void FTPClientCLI::doDeleteFile(char *cmd_argv[], int cmd_argc)
+{
     //TODO: code here;
     try
     {
@@ -305,7 +328,6 @@ void FTPClientCLI::doDeleteFile(char *cmd_argv[], int cmd_argc){
         }
         FTPClientCLI::ftpClient.delete_file(filename);
         std::cout << "Delete file succeeded" << endl;
-
     }
     catch (CustomizeException &e)
     {
@@ -340,6 +362,11 @@ void FTPClientCLI::doDownload(char *cmd_argv[], int cmd_argc)
         ss >> filename;
         FTPClientCLI::ftpClient.download(filename);
     }
+    catch (CustomizeException &e){
+        SetConsoleTextAttribute(console, COLOR_ERROR);
+        cerr << "ERROR: " << e.what() << endl;
+        SetConsoleTextAttribute(console, COLOR_DEFAULT);
+    }
     catch (SocketException &e)
     {
         SetConsoleTextAttribute(console, COLOR_ERROR);
@@ -368,6 +395,11 @@ void FTPClientCLI::doUpload(char *cmd_argv[], int cmd_argc)
         ss >> filename;
         FTPClientCLI::ftpClient.upload(filename);
     }
+    catch (CustomizeException &e){
+        SetConsoleTextAttribute(console, COLOR_ERROR);
+        cerr << "ERROR: " << e.what() << endl;
+        SetConsoleTextAttribute(console, COLOR_DEFAULT);
+    }
     catch (SocketException &e)
     {
         SetConsoleTextAttribute(console, COLOR_ERROR);
@@ -384,6 +416,11 @@ void FTPClientCLI::doPWD(char *cmd_argv[], int cmd_argc)
         cout << "'" << response << "'"
              << " is current directory" << endl;
     }
+    catch (CustomizeException &e){
+        SetConsoleTextAttribute(console, COLOR_ERROR);
+        cerr << "ERROR: " << e.what() << endl;
+        SetConsoleTextAttribute(console, COLOR_DEFAULT);
+    }
     catch (SocketException &e)
     {
         SetConsoleTextAttribute(console, COLOR_ERROR);
@@ -397,6 +434,11 @@ void FTPClientCLI::doDIR(char *cmd_argv[], int cmd_argc)
     try
     {
         std::cout << FTPClientCLI::ftpClient.get_directory();
+    }
+    catch (CustomizeException &e){
+        SetConsoleTextAttribute(console, COLOR_ERROR);
+        cerr << "ERROR: " << e.what() << endl;
+        SetConsoleTextAttribute(console, COLOR_DEFAULT);
     }
     catch (SocketException &e)
     {
