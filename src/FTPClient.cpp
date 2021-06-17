@@ -174,10 +174,11 @@ string FTPClient::get_list_file()
     get_receive_socket_control();
 
     // get result from socket data
-    return get_receive_socket_data();
+    string response =  get_receive_socket_data();
 
     // close socket data
     socketData.close();
+    return response;
 }
 string FTPClient::get_present_working_directory()
 {
@@ -197,7 +198,7 @@ string FTPClient::get_directory()
 {
     if (!is_connected() && !is_login())
         throw SocketException("You should connect and login!");
-
+    
     string port = parse_epsv_response();
 
     socketData.connect(hostname, port);
@@ -206,10 +207,10 @@ string FTPClient::get_directory()
 
     get_receive_socket_control();
     get_receive_socket_control();
-
-    return get_receive_socket_data();
+    string res = get_receive_socket_data();
 
     socketData.close();
+    return res;    
 }
 void FTPClient::download(const string &filename)
 {
