@@ -65,17 +65,15 @@ string FTPClient::get_host_name()
     return this->hostname;
 }
 
-void FTPClient::login(CmdLineInterface *callback)
+void FTPClient::login(const string &username, const string &password, CmdLineInterface *callback)
 {
 
     if (!is_connected())
         throw SocketException("You should connect!");
 
-    std::string username, password, request;
+    std::string request;
     Response res;
 
-    std::cout << "Username: ";
-    std::cin >> username;
     request = "user " + username + "\r\n";
 
     socketControl.send(request);
@@ -84,9 +82,6 @@ void FTPClient::login(CmdLineInterface *callback)
 
     if (res.getCode() == "331")
     {
-
-        std::cout << "Password: ";
-        std::cin >> password;
         request = "pass " + password + "\r\n";
 
         socketControl.send(request);
@@ -104,7 +99,7 @@ void FTPClient::login(CmdLineInterface *callback)
             callback->set_user("");
             callback->set_current_working_directory("");
             callback->setCmdPrompt(callback->getPrompt());
-            
+
             SetConsoleTextAttribute(console, COLOR_ERROR);
             cout << "ERROR: " << res.getMessage() << endl;
             SetConsoleTextAttribute(console, COLOR_PRIMARY);
@@ -166,23 +161,23 @@ void FTPClient::get_list_file()
     if (!is_connected() && !is_login())
         throw SocketException("You should connect and login!");
 
-        Response res;
+    Response res;
 
-        string port = parse_epsv_response();
+    string port = parse_epsv_response();
 
-        socketData.connect(hostname, port);
+    socketData.connect(hostname, port);
 
-        socketControl.send("NLST\r\n");
+    socketControl.send("NLST\r\n");
 
-        // Beacause response of NLST return 2 response
-        get_receive_socket_control();
-        get_receive_socket_control();
+    // Beacause response of NLST return 2 response
+    get_receive_socket_control();
+    get_receive_socket_control();
 
-        // get result from socket data
-        cout << get_receive_socket_data();
+    // get result from socket data
+    cout << get_receive_socket_data();
 
-        // close socket data
-        socketData.close();
+    // close socket data
+    socketData.close();
 }
 string FTPClient::get_present_working_directory()
 {
@@ -192,15 +187,17 @@ string FTPClient::get_present_working_directory()
     socketControl.send("PWD\r\n");
     string response = get_receive_socket_control().getMessage();
     string result = "";
-    for(int i = response.find_first_of('"') + 1; i < response.find_last_of('"'); i++){
-        result+=response[i];
+    for (int i = response.find_first_of('"') + 1; i < response.find_last_of('"'); i++)
+    {
+        result += response[i];
     }
     return result;
 };
-void FTPClient::get_directory(){
+void FTPClient::get_directory()
+{
     if (!is_connected() && !is_login())
         throw SocketException("You should connect and login!");
-    
+
     string port = parse_epsv_response();
 
     socketData.connect(hostname, port);
@@ -213,28 +210,27 @@ void FTPClient::get_directory(){
     cout << get_receive_socket_data();
 
     socketData.close();
-
-
 }
-void FTPClient::download(const string &filename){
+void FTPClient::download(const string &filename)
+{
     if (!is_connected() && !is_login())
         throw SocketException("You should connect and login!");
-    
+
     Response res;
-    
-    FILE *file;    
 
-    string src = "./download/"+filename;
+    FILE *file;
 
-    char *source = const_cast<char*>((src).c_str());
-    file = fopen(source,"wb");
-    if(!file){
+    string src = "./download/" + filename;
+
+    char *source = const_cast<char *>((src).c_str());
+    file = fopen(source, "wb");
+    if (!file)
+    {
         SetConsoleTextAttribute(console, COLOR_ERROR);
-        cout << "ERROR: You should create folder 'download'"<< endl;
+        cout << "ERROR: You should create folder 'download'" << endl;
         SetConsoleTextAttribute(console, COLOR_DEFAULT);
         return;
     }
-
 
     string port = parse_epsv_response();
 
@@ -242,35 +238,39 @@ void FTPClient::download(const string &filename){
 
     socketControl.send("TYPE I\r\n");
     res = get_receive_socket_control();
-    if(res.getCode() != "200") return;
+    if (res.getCode() != "200")
+        return;
 
-    string request = "RETR "+filename+"\r\n";
+    string request = "RETR " + filename + "\r\n";
     socketControl.send(request);
 
     res = get_receive_socket_control();
-    if(res.getCode() == "550"){
-        
+    if (res.getCode() == "550")
+    {
+
         SetConsoleTextAttribute(console, COLOR_ERROR);
-        cout << "ERROR: " <<res.toString() << endl;
+        cout << "ERROR: " << res.toString() << endl;
         SetConsoleTextAttribute(console, COLOR_DEFAULT);
         socketData.close();
-        
-        return;
 
+        return;
     }
     get_receive_socket_control();
 
     SetConsoleTextAttribute(console, COLOR_PRIMARY);
-    cout << "INFO: Download File: " <<filename<<" ..."<< endl;
+    cout << "INFO: Download File: " << filename << " ..." << endl;
     SetConsoleTextAttribute(console, COLOR_DEFAULT);
 
     int bytes;
     char buffer[4096];
-    while(true){
-        if((bytes =socketData.recv(buffer,4096)) == -1){
+    while (true)
+    {
+        if ((bytes = socketData.recv(buffer, 4096)) == -1)
+        {
             std::cout << "recv error: " << strerror(errno) << std::endl;
         }
-        if(bytes == 0){
+        if (bytes == 0)
+        {
             SetConsoleTextAttribute(console, COLOR_PRIMARY);
             std::cout << "INFO: Download File succeeded." << std::endl;
             SetConsoleTextAttribute(console, COLOR_DEFAULT);
@@ -281,16 +281,18 @@ void FTPClient::download(const string &filename){
     fclose(file);
     socketData.close();
 }
-void FTPClient::upload(const string &source){
+void FTPClient::upload(const string &source)
+{
     if (!is_connected() && !is_login())
         throw SocketException("You should connect and login!");
-    
+
     Response res;
     std::ifstream file(source, std::ios::in | std::ios::binary | std::ios::ate);
 
-    if(file){
+    if (file)
+    {
         long length = file.tellg();
-		file.seekg (0, file.beg);
+        file.seekg(0, file.beg);
 
         string port = parse_epsv_response();
 
@@ -298,87 +300,94 @@ void FTPClient::upload(const string &source){
 
         socketControl.send("TYPE I\r\n");
         res = get_receive_socket_control();
-        if(res.getCode() != "200") return;
+        if (res.getCode() != "200")
+            return;
 
         string filename = Extensions::get_file_name(source);
-        string request = "STOR "+filename+"\r\n";
+        string request = "STOR " + filename + "\r\n";
 
         socketControl.send(request);
         res = get_receive_socket_control();
 
-        if(res.getCode() != "150"){
+        if (res.getCode() != "150")
+        {
             SetConsoleTextAttribute(console, COLOR_ERROR);
-            std::cout<<"ERROR:"<< res.toString() <<std::endl;
+            std::cout << "ERROR:" << res.toString() << std::endl;
             SetConsoleTextAttribute(console, COLOR_DEFAULT);
             socketData.close();
             return;
         }
 
         SetConsoleTextAttribute(console, COLOR_PRIMARY);
-        std::cout<<"INFO: Sending File : "<<source<<" ..."<<std::endl;
+        std::cout << "INFO: Sending File : " << source << " ..." << std::endl;
         SetConsoleTextAttribute(console, COLOR_DEFAULT);
-        
-        string data;
-		double c_length = length;
 
-        while (length > 0){
-			int read_sz = 2048 <length ? 2048 : length;
-			char buffer[2048+1];
-			
-            file.read(buffer,read_sz);
-			data.assign(buffer,read_sz);
-            
-			socketData.send(data);
-			length -= read_sz;
-		}
+        string data;
+        double c_length = length;
+
+        while (length > 0)
+        {
+            int read_sz = 2048 < length ? 2048 : length;
+            char buffer[2048 + 1];
+
+            file.read(buffer, read_sz);
+            data.assign(buffer, read_sz);
+
+            socketData.send(data);
+            length -= read_sz;
+        }
         socketData.close();
         res = get_receive_socket_control();
-        if(res.getCode() == "226"){
+        if (res.getCode() == "226")
+        {
             SetConsoleTextAttribute(console, COLOR_PRIMARY);
             cout << "INFO: Upload file succeeded." << endl;
             SetConsoleTextAttribute(console, COLOR_DEFAULT);
-           
         }
-        else{
+        else
+        {
             SetConsoleTextAttribute(console, COLOR_ERROR);
             cout << "INFO: Upload file failed." << endl;
             SetConsoleTextAttribute(console, COLOR_DEFAULT);
-           
         }
         file.close();
-        
     }
-    else{
+    else
+    {
         SetConsoleTextAttribute(console, COLOR_ERROR);
         cout << "ERROR: Doesn't exist. Please check the filename." << endl;
         SetConsoleTextAttribute(console, COLOR_DEFAULT);
     }
-        
 }
-void FTPClient::change_current_working_directory(const string &directory,CmdLineInterface *callback){
+void FTPClient::change_current_working_directory(const string &directory, CmdLineInterface *callback)
+{
     //TODO: code;
-    socketControl.send("CWD"+directory+"\r\n");
+    socketControl.send("CWD" + directory + "\r\n");
     Response res = get_receive_socket_control();
 
-    if(res.getCode() == "550"){
+    if (res.getCode() == "550")
+    {
         SetConsoleTextAttribute(console, COLOR_ERROR);
-        cout << "ERROR: "<<directory <<" not found!" << endl;
+        cout << "ERROR: " << directory << " not found!" << endl;
         SetConsoleTextAttribute(console, COLOR_DEFAULT);
         return;
     }
     callback->set_current_working_directory(get_present_working_directory());
     callback->setCmdPrompt(callback->getPrompt());
-
 }
-void FTPClient::delete_directory(const string &directory){
+void FTPClient::delete_directory(const string &directory)
+{
     //TODO: code;
 }
-void FTPClient::create_directory(const string &directory){
+void FTPClient::create_directory(const string &directory)
+{
     //TODO: code;
 }
-void FTPClient::delete_file(const string &directory){
+void FTPClient::delete_file(const string &directory)
+{
     //TODO: code;
 }
-void FTPClient::rename_directory_or_file(const string &src, const string &dest){
+void FTPClient::rename_directory_or_file(const string &src, const string &dest)
+{
     //TODO: code;
 }

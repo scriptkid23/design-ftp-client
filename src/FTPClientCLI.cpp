@@ -58,7 +58,12 @@ void FTPClientCLI::doConnect(char *cmd_argv[], int cmd_argc)
         FTPClientCLI::ftpClient.connect(hostname, port, this);
         if (FTPClientCLI::ftpClient.is_connected())
         {
-            FTPClientCLI::ftpClient.login(this);
+            string username, password;
+            std::cout << "Username:";
+            std::cin >> username;
+            std::cout << "Password:";
+            std::cin >> password;
+            FTPClientCLI::ftpClient.login(username, password, this);
         }
     }
     catch (SocketException &e)
@@ -133,7 +138,12 @@ void FTPClientCLI::doLogin(char *cmd_argv[], int cmd_argc)
 
     try
     {
-        FTPClientCLI::ftpClient.login(this);
+        string username, password;
+        std::cout << "Username:";
+        std::cin >> username;
+        std::cout << "Password:";
+        std::cin >> password;
+        FTPClientCLI::ftpClient.login(username, password, this);
     }
     catch (SocketException &e)
     {
@@ -156,30 +166,30 @@ void FTPClientCLI::doList(char *cmd_argv[], int cmd_argc)
         SetConsoleTextAttribute(console, COLOR_DEFAULT);
 
         FTPClientCLI::ftpClient.close(this);
-        
     }
 }
 void FTPClientCLI::doCWD(char *cmd_argv[], int cmd_argc)
 {
-    try{
+    try
+    {
         //TODO: code here;
         std::stringstream ss;
         std::string temp;
         std::string directory = "";
         // ss << cmd_argv[1];
         // ss >> directory;
-        for(int i = 1; i < cmd_argc; i++){
+        for (int i = 1; i < cmd_argc; i++)
+        {
             ss << cmd_argv[i];
             ss >> temp;
-            directory = directory+" "+temp;
+            directory = directory + " " + temp;
             ss.clear();
-
         }
-        
 
         FTPClientCLI::ftpClient.change_current_working_directory(directory, this);
     }
-    catch(SocketException &e){
+    catch (SocketException &e)
+    {
         SetConsoleTextAttribute(console, COLOR_ERROR);
         cerr << "ERROR: " << e.what() << endl;
         SetConsoleTextAttribute(console, COLOR_DEFAULT);
@@ -283,4 +293,3 @@ void FTPClientCLI::doDIR(char *cmd_argv[], int cmd_argc)
         FTPClientCLI::ftpClient.close(this);
     }
 }
-

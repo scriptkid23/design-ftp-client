@@ -31,7 +31,7 @@ class FTPClient;
             void connect(const string &hostname, const string &port, CmdLineInterface *callback);
             void set_host_name(string hostname);
             void echo(const string &msg);
-            void login(CmdLineInterface *callback);
+            void login(const string &username, const string &password, CmdLineInterface *callback);
             void get_list_file();
             void close(CmdLineInterface *callback);
             void change_current_working_directory(const string &directory, CmdLineInterface *callback);
