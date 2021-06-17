@@ -8,6 +8,7 @@
 #include "tcpsocket.h"
 #include "Extensions.h"
 #include "cli.h"
+#include "CustomizeException.h"
 #include "constants.h"
 #include "Response.h"
 #include <fstream>

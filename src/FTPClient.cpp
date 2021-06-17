@@ -379,10 +379,22 @@ void FTPClient::change_current_working_directory(const string &directory, CmdLin
 void FTPClient::delete_directory(const string &directory)
 {
     //TODO: code;
+    socketControl.send("XRMD"+directory+"\r\n");
+    Response res = get_receive_socket_control();
+    if (res.getCode() != "250")
+    {
+       throw CustomizeException(res.toString());
+    }
+
 }
 void FTPClient::create_directory(const string &directory)
 {
     //TODO: code;
+    socketControl.send("XMKD"+directory+"\r\n");
+    Response res = get_receive_socket_control();
+    if(res.getCode() != "257"){
+        throw CustomizeException(res.toString());
+    }
 }
 void FTPClient::delete_file(const string &directory)
 {

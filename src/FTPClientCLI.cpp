@@ -194,11 +194,70 @@ void FTPClientCLI::doCWD(char *cmd_argv[], int cmd_argc)
         FTPClientCLI::ftpClient.close(this);
     }
 };
-void FTPClientCLI::doDeleteDirectory(char *cmd_argv[], int cmd_argc){
+void FTPClientCLI::doDeleteDirectory(char *cmd_argv[], int cmd_argc)
+{
     //TODO: code here;
+    try
+    {
+        std::stringstream ss;
+        std::string temp;
+        std::string directory = "";
+
+        for (int i = 1; i < cmd_argc; i++)
+        {
+            ss << cmd_argv[i];
+            ss >> temp;
+            directory = directory + " " + temp;
+            ss.clear();
+        }
+        FTPClientCLI::ftpClient.delete_directory(directory);
+        std::cout << "Delete file: " << directory << " succeeded." << endl;
+    }
+    catch (CustomizeException &e)
+    {
+        SetConsoleTextAttribute(console, COLOR_ERROR);
+        cerr << "ERROR: " << e.what() << endl;
+        SetConsoleTextAttribute(console, COLOR_DEFAULT);
+    }
+    catch (SocketException &e)
+    {
+        SetConsoleTextAttribute(console, COLOR_ERROR);
+        cerr << "ERROR: " << e.what() << endl;
+        SetConsoleTextAttribute(console, COLOR_DEFAULT);
+        FTPClientCLI::ftpClient.close(this);
+    }
 };
-void FTPClientCLI::doCreateDirectory(char *cmd_argv[], int cmd_argc){
-    //TODO: code here;
+void FTPClientCLI::doCreateDirectory(char *cmd_argv[], int cmd_argc)
+{
+    try
+    {
+        std::stringstream ss;
+        std::string temp;
+        std::string directory = "";
+
+        for (int i = 1; i < cmd_argc; i++)
+        {
+            ss << cmd_argv[i];
+            ss >> temp;
+            directory = directory + " " + temp;
+            ss.clear();
+        }
+        FTPClientCLI::ftpClient.create_directory(directory);
+        std::cout << "Create directory: " << directory << " succeeded."<< endl ;
+    }
+    catch (CustomizeException &e)
+    {
+        SetConsoleTextAttribute(console, COLOR_ERROR);
+        cerr << "ERROR: " << e.what() << endl;
+        SetConsoleTextAttribute(console, COLOR_DEFAULT);
+    }
+    catch (SocketException &e)
+    {
+        SetConsoleTextAttribute(console, COLOR_ERROR);
+        cerr << "ERROR: " << e.what() << endl;
+        SetConsoleTextAttribute(console, COLOR_DEFAULT);
+        FTPClientCLI::ftpClient.close(this);
+    }
 };
 void FTPClientCLI::doRenameDirectoryOrFile(char *cmd_argv[], int cmd_argc){
     //TODO: code here;
