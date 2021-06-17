@@ -45,7 +45,7 @@ class CmdLineInterface {
         CmdLineInterface(string prompt);
         void setCmdPrompt(const string prompt);
         void clearScreen();
-        void showCmdPrompt();
+        void showCmdPrompt();   
         void addCmd(const string name, CLI_CMD_FUNC f);
         void run();
         virtual void initCmd();
