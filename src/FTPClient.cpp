@@ -174,7 +174,7 @@ string FTPClient::get_list_file()
     get_receive_socket_control();
 
     // get result from socket data
-    string response =  get_receive_socket_data();
+    string response = get_receive_socket_data();
 
     // close socket data
     socketData.close();
@@ -198,7 +198,7 @@ string FTPClient::get_directory()
 {
     if (!is_connected() && !is_login())
         throw SocketException("You should connect and login!");
-    
+
     string port = parse_epsv_response();
 
     socketData.connect(hostname, port);
@@ -210,7 +210,7 @@ string FTPClient::get_directory()
     string res = get_receive_socket_data();
 
     socketData.close();
-    return res;    
+    return res;
 }
 void FTPClient::download(const string &filename)
 {
@@ -379,39 +379,47 @@ void FTPClient::change_current_working_directory(const string &directory, CmdLin
 void FTPClient::delete_directory(const string &directory)
 {
     //TODO: code;
-    socketControl.send("XRMD"+directory+"\r\n");
+    socketControl.send("XRMD" + directory + "\r\n");
     Response res = get_receive_socket_control();
     if (res.getCode() != "250")
     {
-       throw CustomizeException(res.toString());
+        throw CustomizeException(res.toString());
     }
-
 }
 void FTPClient::create_directory(const string &directory)
 {
     //TODO: code;
-    socketControl.send("XMKD"+directory+"\r\n");
+    socketControl.send("XMKD" + directory + "\r\n");
     Response res = get_receive_socket_control();
-    if(res.getCode() != "257"){
+    if (res.getCode() != "257")
+    {
         throw CustomizeException(res.toString());
     }
 }
 void FTPClient::delete_file(const string &directory)
 {
     //TODO: code;
+    socketControl.send("DELE" + directory + "\r\n");
+    Response res = get_receive_socket_control();
+    if (res.getCode() != "250")
+    {
+        throw CustomizeException(res.toString());
+    }
 }
 void FTPClient::rename_directory_or_file(const string &src, const string &dest)
 {
     //TODO: code;
-    
-    socketControl.send("RNFR "+src+"\r\n");
+
+    socketControl.send("RNFR " + src + "\r\n");
     Response res = get_receive_socket_control();
-    if(res.getCode() != "350"){
+    if (res.getCode() != "350")
+    {
         throw CustomizeException(res.toString());
     }
-    socketControl.send("RNTO "+dest+"\r\n");
+    socketControl.send("RNTO " + dest + "\r\n");
     res = get_receive_socket_control();
-    if(res.getCode() !="250"){
+    if (res.getCode() != "250")
+    {
         throw CustomizeException(res.toString());
     }
 }

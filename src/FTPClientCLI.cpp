@@ -290,6 +290,36 @@ void FTPClientCLI::doRenameDirectoryOrFile(char *cmd_argv[], int cmd_argc)
 };
 void FTPClientCLI::doDeleteFile(char *cmd_argv[], int cmd_argc){
     //TODO: code here;
+    try
+    {
+        std::stringstream ss;
+        std::string temp;
+        std::string filename = "";
+
+        for (int i = 1; i < cmd_argc; i++)
+        {
+            ss << cmd_argv[i];
+            ss >> temp;
+            filename = filename + " " + temp;
+            ss.clear();
+        }
+        FTPClientCLI::ftpClient.delete_file(filename);
+        std::cout << "Delete file succeeded" << endl;
+
+    }
+    catch (CustomizeException &e)
+    {
+        SetConsoleTextAttribute(console, COLOR_ERROR);
+        cerr << "ERROR: " << e.what() << endl;
+        SetConsoleTextAttribute(console, COLOR_DEFAULT);
+    }
+    catch (SocketException &e)
+    {
+        SetConsoleTextAttribute(console, COLOR_ERROR);
+        cerr << "ERROR: " << e.what() << endl;
+        SetConsoleTextAttribute(console, COLOR_DEFAULT);
+        FTPClientCLI::ftpClient.close(this);
+    }
 };
 void FTPClientCLI::doDownload(char *cmd_argv[], int cmd_argc)
 {
