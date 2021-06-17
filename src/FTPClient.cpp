@@ -403,4 +403,15 @@ void FTPClient::delete_file(const string &directory)
 void FTPClient::rename_directory_or_file(const string &src, const string &dest)
 {
     //TODO: code;
+    
+    socketControl.send("RNFR "+src+"\r\n");
+    Response res = get_receive_socket_control();
+    if(res.getCode() != "350"){
+        throw CustomizeException(res.toString());
+    }
+    socketControl.send("RNTO "+dest+"\r\n");
+    res = get_receive_socket_control();
+    if(res.getCode() !="250"){
+        throw CustomizeException(res.toString());
+    }
 }
