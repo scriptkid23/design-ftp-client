@@ -193,18 +193,7 @@ void FTPClientCLI::doCWD(char *cmd_argv[], int cmd_argc)
 {
     try
     {
-        std::stringstream ss;
-        std::string temp;
-        std::string directory = "";
-
-        for (int i = 1; i < cmd_argc; i++)
-        {
-            ss << cmd_argv[i];
-            ss >> temp;
-            directory = directory + " " + temp;
-            ss.clear();
-        }
-
+        string directory = Extensions::parse_name(cmd_argv, cmd_argc);
         FTPClientCLI::ftpClient.change_current_working_directory(directory, this);
     }
     catch (CustomizeException &e)
@@ -226,17 +215,7 @@ void FTPClientCLI::doDeleteDirectory(char *cmd_argv[], int cmd_argc)
     //TODO: code here;
     try
     {
-        std::stringstream ss;
-        std::string temp;
-        std::string directory = "";
-
-        for (int i = 1; i < cmd_argc; i++)
-        {
-            ss << cmd_argv[i];
-            ss >> temp;
-            directory = directory + " " + temp;
-            ss.clear();
-        }
+        string directory = Extensions::parse_name(cmd_argv, cmd_argc);
         FTPClientCLI::ftpClient.delete_directory(directory);
         std::cout << "Delete file: " << directory << " succeeded." << endl;
     }
@@ -258,17 +237,7 @@ void FTPClientCLI::doCreateDirectory(char *cmd_argv[], int cmd_argc)
 {
     try
     {
-        std::stringstream ss;
-        std::string temp;
-        std::string directory = "";
-
-        for (int i = 1; i < cmd_argc; i++)
-        {
-            ss << cmd_argv[i];
-            ss >> temp;
-            directory = directory + " " + temp;
-            ss.clear();
-        }
+        string directory = Extensions::parse_name(cmd_argv, cmd_argc);
         FTPClientCLI::ftpClient.create_directory(directory);
         std::cout << "Create directory: " << directory << " succeeded." << endl;
     }
@@ -319,17 +288,7 @@ void FTPClientCLI::doDeleteFile(char *cmd_argv[], int cmd_argc)
     //TODO: code here;
     try
     {
-        std::stringstream ss;
-        std::string temp;
-        std::string filename = "";
-
-        for (int i = 1; i < cmd_argc; i++)
-        {
-            ss << cmd_argv[i];
-            ss >> temp;
-            filename = filename + " " + temp;
-            ss.clear();
-        }
+        string filename = Extensions::parse_name(cmd_argv, cmd_argc);
         FTPClientCLI::ftpClient.delete_file(filename);
         std::cout << "Delete file succeeded" << endl;
     }
@@ -351,25 +310,7 @@ void FTPClientCLI::doDownload(char *cmd_argv[], int cmd_argc)
 {
     try
     {
-        std::stringstream ss;
-        std::string temp;
-        std::string filename = "";
-
-        for (int i = 1; i < cmd_argc; i++)
-        {
-            ss << cmd_argv[i];
-            ss >> temp;
-            if (i == cmd_argc - 1)
-            {
-                filename = filename + temp;
-            }
-            else
-            {
-                filename = filename + temp + " ";
-            }
-
-            ss.clear();
-        }
+        string filename = Extensions::parse_name(cmd_argv, cmd_argc);
         FTPClientCLI::ftpClient.download(filename);
     }
     catch (CustomizeException &e)
@@ -391,25 +332,7 @@ void FTPClientCLI::doUpload(char *cmd_argv[], int cmd_argc)
 {
     try
     {
-        std::stringstream ss;
-        std::string temp;
-        std::string filename = "";
-
-        for (int i = 1; i < cmd_argc; i++)
-        {
-            ss << cmd_argv[i];
-            ss >> temp;
-            if (i == cmd_argc - 1)
-            {
-                filename = filename + temp;
-            }
-            else
-            {
-                filename = filename + temp + " ";
-            }
-
-            ss.clear();
-        }
+        string filename = Extensions::parse_name(cmd_argv, cmd_argc);
         FTPClientCLI::ftpClient.upload(filename);
     }
     catch (CustomizeException &e)

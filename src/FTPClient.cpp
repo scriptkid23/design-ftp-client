@@ -339,7 +339,7 @@ void FTPClient::upload(const string &source)
 void FTPClient::change_current_working_directory(const string &directory, CmdLineInterface *callback)
 {
     //TODO: code;
-    socketControl.send("CWD" + directory + "\r\n");
+    socketControl.send("CWD " + directory + "\r\n");
     Response res = get_receive_socket_control();
 
     if (res.getCode() == "550")
@@ -352,7 +352,7 @@ void FTPClient::change_current_working_directory(const string &directory, CmdLin
 void FTPClient::delete_directory(const string &directory)
 {
     //TODO: code;
-    socketControl.send("XRMD" + directory + "\r\n");
+    socketControl.send("XRMD " + directory + "\r\n");
     Response res = get_receive_socket_control();
     if (res.getCode() != "250")
     {
@@ -362,7 +362,7 @@ void FTPClient::delete_directory(const string &directory)
 void FTPClient::create_directory(const string &directory)
 {
     //TODO: code;
-    socketControl.send("XMKD" + directory + "\r\n");
+    socketControl.send("XMKD " + directory + "\r\n");
     Response res = get_receive_socket_control();
     if (res.getCode() != "257")
     {
@@ -372,7 +372,7 @@ void FTPClient::create_directory(const string &directory)
 void FTPClient::delete_file(const string &directory)
 {
     //TODO: code;
-    socketControl.send("DELE" + directory + "\r\n");
+    socketControl.send("DELE " + directory + "\r\n");
     Response res = get_receive_socket_control();
     if (res.getCode() != "250")
     {
