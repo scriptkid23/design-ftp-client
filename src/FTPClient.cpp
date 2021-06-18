@@ -90,9 +90,6 @@ void FTPClient::login(const string &username, const string &password, CmdLineInt
             callback->set_current_working_directory("");
             callback->setCmdPrompt(callback->getPrompt());
 
-            // SetConsoleTextAttribute(console, COLOR_ERROR);
-            // cout << "ERROR: " << res.getMessage() << endl;
-            // SetConsoleTextAttribute(console, COLOR_PRIMARY);
             isLogin = false;
             throw CustomizeException(res.toString());
         }
@@ -237,12 +234,8 @@ void FTPClient::download(const string &filename)
     if (res.getCode() == "550")
     {
 
-        // SetConsoleTextAttribute(console, COLOR_ERROR);
-        // cout << "ERROR: " << res.toString() << endl;
-        // SetConsoleTextAttribute(console, COLOR_DEFAULT);
         socketData.close();
         throw CustomizeException(res.toString());
-        // return;
     }
     get_receive_socket_control();
 
@@ -351,10 +344,7 @@ void FTPClient::change_current_working_directory(const string &directory, CmdLin
 
     if (res.getCode() == "550")
     {
-        SetConsoleTextAttribute(console, COLOR_ERROR);
-        cout << "ERROR: " << directory << " not found!" << endl;
-        SetConsoleTextAttribute(console, COLOR_DEFAULT);
-        return;
+        throw CustomizeException(res.toString());
     }
     callback->set_current_working_directory(get_present_working_directory());
     callback->setCmdPrompt(callback->getPrompt());
