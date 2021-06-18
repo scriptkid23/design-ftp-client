@@ -33,6 +33,8 @@ void FTPClient::close(CmdLineInterface *callback)
     }
     this->connected = false;
     this->isLogin = false;
+    callback->set_hostname("");
+    callback->set_user("");
     callback->setCmdPrompt("62pm2@spirity> ");
 }
 bool FTPClient::is_connected()
