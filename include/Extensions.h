@@ -20,6 +20,7 @@
             static Response convert_buffer_to_response(const char* buffer);
             static std::string get_file_name(const std::string &source);
             static std::string get_path(const std::string &source);
+            static std::string parse_name(char *cmd_argv[], int cmd_argc);
     };
 
 #endif
