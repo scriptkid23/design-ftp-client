@@ -56,15 +56,6 @@ void FTPClientCLI::doConnect(char *cmd_argv[], int cmd_argc)
         ss >> port;
 
         FTPClientCLI::ftpClient.connect(hostname, port, this);
-        if (FTPClientCLI::ftpClient.is_connected())
-        {
-            string username, password;
-            std::cout << "Username:";
-            std::cin >> username;
-            std::cout << "Password:";
-            std::cin >> password;
-            FTPClientCLI::ftpClient.login(username, password, this);
-        }
         SetConsoleTextAttribute(console, COLOR_PRIMARY);
         cout << "INFO: Connect to server succeeded." << endl;
         SetConsoleTextAttribute(console, COLOR_DEFAULT);

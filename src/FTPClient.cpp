@@ -12,8 +12,7 @@ void FTPClient::connect(const string &hostname, const string &port, CmdLineInter
         char buffer[256];
 
         socketControl.connect(hostname, port);
-        socketControl.recv(buffer, 256);
-
+        Response res = get_receive_socket_control();
         set_host_name(hostname);
 
         callback->set_hostname(hostname);
@@ -64,19 +63,19 @@ void FTPClient::login(const string &username, const string &password, CmdLineInt
     std::string request;
     Response res;
 
-    request = "user " + username + "\r\n";
+    request = "USER " + username + "\r\n";
 
     socketControl.send(request);
 
     res = get_receive_socket_control();
 
+
     if (res.getCode() == "331")
     {
-        request = "pass " + password + "\r\n";
+        request = "PASS " + password + "\r\n";
 
         socketControl.send(request);
         res = get_receive_socket_control();
-
         if (res.getCode() == "230")
         {
             callback->set_user(username);
@@ -138,8 +137,8 @@ string FTPClient::get_receive_socket_data()
 Response FTPClient::get_receive_socket_control()
 {
 
-    char buffer[255];
-    int bytes = socketControl.recv(buffer, 255);
+    char buffer[500];
+    int bytes = socketControl.recv(buffer, 500);
     buffer[bytes] = 0;
 
     return Extensions::convert_buffer_to_response(buffer);

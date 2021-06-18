@@ -59,12 +59,15 @@ Response Extensions::convert_buffer_to_response(const char *buffer)
     std::regex regexCRLF("\r\n");
     auto result = std::regex_replace(str, regexCRLF, "\0");
 
+    regex regexNumber("[0-9]+");
+    smatch m;
+    regex_search(result, m, regexNumber);
     string::size_type pos;
+    
     pos = result.find(' ', 0);
-    std::string code = result.substr(0, pos);
     std::string message = result.substr(pos + 1);
 
-    Response response = Response(code, message);
+    Response response = Response(m[0], message);
 
     return response;
 }
