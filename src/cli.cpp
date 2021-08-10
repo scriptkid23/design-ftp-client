@@ -147,7 +147,7 @@ void CmdLineInterface::run()
 
 string CmdLineInterface::getPrompt(){
     if(user.size() != 0 && cWorkingDirectory.size() != 0){
-        return hostname+" "+user+":~"+cWorkingDirectory+"> ";
+        return hostname+"@"+user+":~"+cWorkingDirectory+"> ";
     }
     else{
         return hostname+"> ";

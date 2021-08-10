@@ -29,7 +29,7 @@ void FTPClientCLI::initCmd()
     addCmd("upload", CLI_CAST(&FTPClientCLI::doUpload));
     addCmd("del", CLI_CAST(&FTPClientCLI::doDeleteFile));
 
-    addCmd("exit", CLI_CAST(&FTPClientCLI::doClose));
+    addCmd("close", CLI_CAST(&FTPClientCLI::doClose));
 }
 
 void FTPClientCLI::doConnect(char *cmd_argv[], int cmd_argc)
@@ -116,7 +116,7 @@ void FTPClientCLI::doHelp(char *cmd_argv[], int cmd_argc)
         std::cout << std::setw(20) << std::left << "Print local help information" << std::endl;
         std::cout << std::setw(30) << std::left << "clear";
         std::cout << std::setw(20) << std::left << "Clears the screen" << std::endl;
-        std::cout << std::setw(30) << std::left << "exit";
+        std::cout << std::setw(30) << std::left << "close";
         std::cout << std::setw(20) << std::left << "Logout." << std::endl;
     }
 }
